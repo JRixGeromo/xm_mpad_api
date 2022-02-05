@@ -1,0 +1,3 @@
+const GET_USER_PROFILE = 'GET_USER_PROFILE';
+
+export { GET_USER_PROFILE };

@@ -1,0 +1,62 @@
+.profile-nav {
+  border-right: unset;
+  text-transform: uppercase;
+  font-family: $font-family-montserrat;
+
+  .el-menu-item {
+    font-size: 16px !important;
+    color: #000 !important;
+    font-weight: 700 !important;
+  }
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  box-shadow: 0px 1px 15px 7px #0000001A;
+  padding: 30px 0;
+
+  .profile-image {
+    width: 114px;
+    height: 114px;
+    border-radius: 50%;
+    display: block;
+  }
+
+  .profile-name {
+    font-family: $font-family-montserrat;
+    font-size: 20px;
+    font-weight: 700;
+    padding-top: 10px;
+  }
+}
+
+.custom-tab {
+  display: flex;
+  align-items: center;
+  overflow: auto;
+  padding: 10px;
+  justify-content: center;
+
+  .tab-item {
+    width: 100px;
+    padding: 10px;
+    border-radius: 40px;
+    text-align: center;
+    font-family: $font-family-prompt;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &.selected {
+      background: #575757;
+      color: #fff;
+      font-weight: 700;
+      font-family: $font-family-montserrat;
+    }
+  }
+}

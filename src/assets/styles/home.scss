@@ -1,0 +1,163 @@
+.home-carousel {
+  .carousel__item {
+    width          : 100%;
+    font-size      : 20px;
+    border-radius  : 0px;
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    cursor         : grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    .carousel-item-overlay {
+      position: absolute;
+      width   : 100%;
+      height  : 100%;
+      filter  : blur(5px);
+
+      .color-background {
+        position  : absolute;
+        width     : 100%;
+        height    : 100%;
+        background: #000000de;
+      }
+
+      .image-background {
+        width     : 100%;
+        opacity   : 0.5;
+        transform : scaleX(-1);
+        height    : 100%;
+        object-fit: cover;
+      }
+    }
+
+    .carousel-item-container {
+      height         : 500px;
+      padding        : 0 20px;
+      display        : flex;
+      flex-flow      : column;
+      align-items    : center;
+      justify-content: center;
+
+      .image-container {
+        height         : 350px;
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+
+        img {
+          height    : 100%;
+          width     : 100%;
+          object-fit: contain;
+          filter    : drop-shadow(2px 4px 6px black);
+        }
+      }
+
+      .detail-container {
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+        flex-flow      : column;
+        height         : 100%;
+
+        .info-container {
+          display        : flex;
+          justify-content: flex-start;
+          align-items    : center;
+          text-align     : left;
+          color          : white;
+          width          : 100%;
+          font-family    : $font-family-montserrat;
+          font-weight    : 700;
+        }
+
+        .button-container {
+          display        : flex;
+          align-items    : center;
+          justify-content: flex-start;
+          width          : 100%;
+
+          .el-button {
+            margin-top: 40px;
+          }
+
+          .el-button+.el-button {
+            margin-left: 50px;
+          }
+        }
+
+        .button-container.mobile {
+          justify-content: space-evenly;
+          width          : 100%;
+
+          .el-button {
+            margin: 0;
+          }
+
+          .el-button+.el-button {
+            margin-left: 20px;
+          }
+        }
+      }
+
+      .mobile-only {
+        display: none;
+      }
+
+      @media screen and (max-width: 768px) {
+        .mobile-only {
+          display: block;
+          padding: 20px 0;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .button-container.desktop {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .carousel__pagination-button {
+    height          : 10px;
+    background-color: #dadada;
+  }
+
+  .carousel__pagination-button--active {
+    background-color: #3e3e3e !important;
+  }
+
+  .carousel__pagination {
+    left        : 0;
+    right       : 0;
+    margin-left : auto;
+    margin-right: auto;
+    position    : absolute;
+    width       : 40%;
+    bottom      : 10px;
+  }
+}
+
+.home-listing-container {
+  .license-image-container {
+    height         : 170px;
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+
+    img {
+      width     : auto;
+      height    : auto;
+      max-width : 100%;
+      max-height: 100%;
+    }
+  }
+
+  .license-name {
+    padding-top: 10px;
+  }
+}
