@@ -1,9 +1,9 @@
 <template>
-  <div class="payment-card">
+  <div class="payment-card" v-if="transactionDetail && transactionProduct.images">
     <el-row>
       <el-col :span="6" :xs="12">
         <div class="product-img-wrapper">
-          <img class="product-img" :src="productDetail.images[0].productImageUrl" />
+          <img class="product-img" :src="transactionProduct.images[0].productImageUrl" />
         </div>
       </el-col>
       <el-col :span="6" class="px-10 hidden-sm-and-down">
@@ -12,10 +12,10 @@
           class="sub-label-light fs-16 d-flex-column h-100"
         >
           <div>
-            <div>{{ productDetail.name }}</div>
-            <div>{{ productDetail.license }}, {{ productDetail.scale }} Scale</div>
+            <div>{{ transactionProduct.name }}</div>
+            <div>{{ transactionProduct.license }}, {{ transactionProduct.scale }} Scale</div>
           </div>
-          <div class="font-bold">SGD${{ productDetail.listingPrice.toLocaleString() }}</div>
+          <div class="font-bold">SGD${{ transactionProduct.listingPrice.toLocaleString() }}</div>
         </div>
       </el-col>
       <el-col :span="6" :xs="12">
@@ -26,28 +26,31 @@
             <div class="d-flex hidden-sm-and-down">
               <div class="px-10">
                 <div class="font-bold">Seller</div>
-                <div>sellerusername</div>
+                <div>{{transactionSeller.userName}}</div>
               </div>
               <div class="px-10">
                 <div class="font-bold">Buyer</div>
-                <div>desmondtzh</div>
+                <div>{{transactionBuyer.userName}}</div>
               </div>
             </div>
 
             <div class="hidden-sm-and-up">
               <div class="px-10">
                 <div class="font-bold">Seller</div>
-                <div>sellerusername</div>
+                <div>{{transactionSeller.userName}}</div>
               </div>
               <div class="px-10">
                 <div class="font-bold">Buyer</div>
-                <div>desmondtzh</div>
+                <div>{{transactionBuyer.userName}}</div>
               </div>
             </div>
 
             <div class="px-10 hidden-sm-and-down">
               <div class="font-bold fs-20 font-m">Status</div>
-              <div>{{ productDetail.status }}</div>
+              <div>{{ transactionProduct.status }}</div>
+            </div>
+            <div class="px-10 hidden-sm-and-down">
+              <div>{{ dayjs(transactionDetail.paymentDate).format('DD/MM/YYYY hh:mm A') }}</div>
             </div>
           </div>
       </el-col>
@@ -58,9 +61,9 @@
           >
             <div class="d-flex">
               <div>
-                <div>{{ productDetail.name }}</div>
-                <div>{{ productDetail.license }}, {{ productDetail.scale }} Scale</div>
-                <div class="font-bold">SGD${{ productDetail.listingPrice.toLocaleString() }}</div>
+                <div>{{ transactionProduct.name }}</div>
+                <div>{{ transactionProduct.license }}, {{ transactionProduct.scale }} Scale</div>
+                <div class="font-bold">SGD${{ transactionProduct.listingPrice.toLocaleString() }}</div>
               </div>
             </div>
           </div>
@@ -73,7 +76,7 @@
             <div class="d-flex">
               <div>
                 <div class="font-bold fs-20 font-m">Status</div>
-              <div>{{ productDetail.status }}</div>
+              <div>{{ transactionProduct.status }}</div>
               </div>
             </div>
           </div>
@@ -83,19 +86,24 @@
           style="line-height: 1.7; text-align: center;"
           class="sub-label-light fs-16"
         >
-          <router-link :to="{ path: '/transaction/1'}">
+          <router-link :to="`/transaction/${transactionDetail.transactionId}`">
             <el-button plain class="font-bold payment-v-button custom-btn">VIEW</el-button>
           </router-link>
         </div>
       </el-col>
-  </el-row>
+    </el-row>
   </div>
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
+import productServices from '@/services/product-service';
+import profileServices from '@/services/profile-service';
+import dayjs from 'dayjs';
+
 export default {
   props: {
-    productDetail: {
+    transactionDetail: {
       type: Object,
       required: true,
     },
@@ -103,6 +111,40 @@ export default {
       type: String,
       default: null,
     },
+  },
+  setup(props) {
+    const transactionProduct = ref([]);
+    const transactionSeller = ref([]);
+    const transactionBuyer = ref([]);
+
+    const getTransactionProduct = async () => {
+      transactionProduct.value = await productServices.getProductById(props.transactionDetail.productId);
+      console.log('transactionProduct', transactionProduct.value);
+    };
+
+    const getTransactionSeller = async () => {
+      transactionSeller.value = await profileServices.getProfilebyUserId(props.transactionDetail.sellerUserId);
+      console.log('transactionSeller', transactionSeller.value);
+    };
+
+    const getTransactionBuyer = async () => {
+      transactionBuyer.value = await profileServices.getProfilebyUserId(props.transactionDetail.buyerUserId);
+      console.log('transactionBuyer', transactionBuyer.value);
+    };
+
+    onMounted(() => {
+      console.log('transactionDetail', props.transactionDetail);
+      getTransactionProduct();
+      getTransactionSeller();
+      getTransactionBuyer();
+    });
+
+    return {
+      transactionProduct,
+      transactionSeller,
+      transactionBuyer,
+      dayjs,
+    };
   },
 };
 </script>

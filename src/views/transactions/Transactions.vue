@@ -39,9 +39,9 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col v-for="product in listings" :key="product.id" :xs="24" :sm="24">
+      <el-col v-for="transaction in transactionList" :key="transaction.id" :xs="24" :sm="24">
         <div style="padding: 20px; border: 1px solid #C4C4C4; margin-bottom: 10px;">
-          <TransactionCard :productDetail="product" />
+          <TransactionCard :transactionDetail="transaction" />
         </div>
       </el-col>
     </el-row>
@@ -54,9 +54,9 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import TransactionCard from '@/components/Transaction/TransactionCard.vue';
+import transactionServices from '@/services/transaction-service';
 import CustomTab from '@/components/CustomTab.vue';
 
 export default {
@@ -66,7 +66,8 @@ export default {
     CustomTab,
   },
   setup() {
-    const listings = ref([]);
+    const transactionList = ref([]);
+    const transactionListLoading = ref(true);
     const activeTabName = ref('all');
     const sortTabName = ref('Sort By');
     const tabOptions = ref([
@@ -96,16 +97,27 @@ export default {
       },
     ]);
 
+    const getUserSoldTransactions = async () => {
+      transactionList.value = await transactionServices.getUserSoldTransactions();
+      transactionListLoading.value = false;
+    };
+
+    const getUserBoughtTransactions = async () => {
+      transactionList.value = await transactionServices.getUserBoughtTransactions();
+      transactionListLoading.value = false;
+    };
+
     onMounted(async () => {
-      const listingRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
-      listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      getUserSoldTransactions();
+      getUserBoughtTransactions();
     });
 
     return {
-      listings,
       activeTabName,
       tabOptions,
       sortTabName,
+      transactionList,
+      transactionListLoading,
     };
   },
 };

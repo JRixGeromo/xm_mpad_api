@@ -8,7 +8,6 @@ function getProducts() {
     });
 }
 
-/*
 function getProductByUserId(userId) {
   return MpApiIni().get(`/api/mp/product/v1/${userId}/product/user`)
     .then((response) => response.data)
@@ -144,10 +143,8 @@ function getLikedProducts() {
       throw error.response.data;
     });
 }
-*/
 
 const services = {
-  /*
   getProductByUserId,
   getProductById,
   getSimilarProductsById,
@@ -165,7 +162,6 @@ const services = {
   likeUnlikeProduct,
   getLikedProducts,
   getLikedProduct,
-  */
   getProducts,
 };
 

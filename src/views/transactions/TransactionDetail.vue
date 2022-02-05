@@ -19,11 +19,11 @@
         </p>
       </router-link>
     </el-row>
-    <div class="payment-card" v-if="productDetail">
+    <div class="payment-card" v-if="transactionDetail && transactionProduct.images">
       <el-row style="justify-content: center;" class="py-40">
           <el-col :span="6" :xs="12">
               <div class="product-img-wrapper">
-              <img class="product-img" :src="productDetail.images[0].productImageUrl">
+              <img class="product-img" :src="transactionProduct.images[0].productImageUrl">
               </div>
           </el-col>
           <el-col :span="6" class="px-10">
@@ -32,10 +32,10 @@
               class="sub-label-light d-flex-column h-100"
               >
               <div>
-                  <div>{{ productDetail.name }}</div>
-                  <div>{{ productDetail.license }}, {{ productDetail.scale }} Scale</div>
+                  <div>{{ transactionProduct.name }}</div>
+                  <div>{{ transactionProduct.license }}, {{ transactionProduct.scale }} Scale</div>
               </div>
-              <div class="font-bold hidden-xs-only">{{ `SGD$${productDetail.listingPrice.toFixed(2)}` }}</div>
+              <div class="font-bold hidden-xs-only">{{ `SGD$${transactionProduct.listingPrice.toFixed(2)}` }}</div>
               </div>
           </el-col>
           <el-col :span="6" :xs="24" class="py-10">
@@ -46,11 +46,11 @@
                   <div class="d-flex" style="justify-content: space-evenly">
                   <div class="px-10">
                       <div class="font-bold">Seller</div>
-                      <div>sellerusername</div>
+                      <div>{{transactionSeller.userName}}</div>
                   </div>
                   <div class="px-10">
                       <div class="font-bold">Buyer</div>
-                      <div>desmondtzh</div>
+                      <div>{{transactionBuyer.userName}}</div>
                   </div>
                   </div>
               </div>
@@ -70,7 +70,7 @@
                 "
               >
                 <p style="font-weight: 700; font-size: 16px;">Status:</p>
-                <p style="font-weight: 400; font-size: 16px;">Payment Made - Awaiting product shipment</p>
+                <p style="font-weight: 400; font-size: 16px;">{{ transactionDetail.status }}</p>
               </div>
           </el-col>
       </el-row>
@@ -96,6 +96,10 @@
                       desmondzth made an offer of SGD$700.00
                     ">
                   </el-step>
+                  <el-step> 01/01/2021 13:45
+                      Transaction hash: a1234t235g32f9v4cv
+                      desmondzth made an offer of SGD$700.00
+                  </el-step>
                 </el-steps>
               </div>
           </el-col>
@@ -105,25 +109,74 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
+import productServices from '@/services/product-service';
+import profileServices from '@/services/profile-service';
+import transactionServices from '@/services/transaction-service';
+import { useRoute } from 'vue-router';
 
 export default {
   setup() {
-    const productDetail = ref(null);
+    const route = useRoute();
+    const transactionList = ref([]);
+    const transactionDetail = ref([]);
+    const transactionProduct = ref([]);
+    const transactionSeller = ref([]);
+    const transactionBuyer = ref([]);
+
+    const getUserSoldTransactions = async () => {
+      transactionList.value = await transactionServices.getUserSoldTransactions();
+      console.log('transactionProduct1', transactionList.value);
+      if (transactionList.value) {
+        transactionList.value.forEach(async (element) => {
+          if (element.transactionId === route.params.id) {
+            transactionDetail.value = element;
+            console.log('transactionDetail', transactionDetail.value);
+            transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
+            console.log('transactionProduct', transactionProduct.value);
+            transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
+            console.log('transactionSeller', transactionSeller.value);
+            transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
+            console.log('transactionBuyer', transactionBuyer.value);
+          }
+        });
+      }
+    };
+
+    const getUserBoughtTransactions = async () => {
+      transactionList.value = await transactionServices.getUserBoughtTransactions();
+      console.log('transactionProduct2', transactionList.value);
+      if (transactionList.value) {
+        transactionList.value.forEach(async (element) => {
+          if (element.transactionId === route.params.id) {
+            transactionDetail.value = element;
+            console.log('transactionDetail', transactionDetail.value);
+            transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
+            console.log('transactionProduct', transactionProduct.value);
+            transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
+            console.log('transactionSeller', transactionSeller.value);
+            transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
+            console.log('transactionBuyer', transactionBuyer.value);
+          }
+        });
+      }
+    };
 
     onMounted(async () => {
-      const productRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/eee4f54c-3f38-4e84-147b-08d9e20d6ffe/product`);
-      productDetail.value = productRes.data;
+      getUserSoldTransactions();
+      getUserBoughtTransactions();
     });
 
     const store = useStore();
     const isMobileView = computed(() => store.state.layout.isMobileView);
 
     return {
-      productDetail,
+      transactionDetail,
+      transactionProduct,
       isMobileView,
+      transactionSeller,
+      transactionBuyer,
     };
   },
 };
