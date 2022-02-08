@@ -96,9 +96,9 @@
                       desmondzth made an offer of SGD$700.00
                     ">
                   </el-step>
-                  <el-step> 01/01/2021 13:45
+                  <el-step description="01/01/2021 13:45
                       Transaction hash: a1234t235g32f9v4cv
-                      desmondzth made an offer of SGD$700.00
+                      desmondzth made an offer of SGD$700.00">
                   </el-step>
                 </el-steps>
               </div>
@@ -119,53 +119,16 @@ import { useRoute } from 'vue-router';
 export default {
   setup() {
     const route = useRoute();
-    const transactionList = ref([]);
-    const transactionDetail = ref([]);
     const transactionProduct = ref([]);
     const transactionSeller = ref([]);
     const transactionBuyer = ref([]);
-
-    const getUserSoldTransactions = async () => {
-      transactionList.value = await transactionServices.getUserSoldTransactions();
-      console.log('transactionProduct1', transactionList.value);
-      if (transactionList.value) {
-        transactionList.value.forEach(async (element) => {
-          if (element.transactionId === route.params.id) {
-            transactionDetail.value = element;
-            console.log('transactionDetail', transactionDetail.value);
-            transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
-            console.log('transactionProduct', transactionProduct.value);
-            transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
-            console.log('transactionSeller', transactionSeller.value);
-            transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
-            console.log('transactionBuyer', transactionBuyer.value);
-          }
-        });
-      }
-    };
-
-    const getUserBoughtTransactions = async () => {
-      transactionList.value = await transactionServices.getUserBoughtTransactions();
-      console.log('transactionProduct2', transactionList.value);
-      if (transactionList.value) {
-        transactionList.value.forEach(async (element) => {
-          if (element.transactionId === route.params.id) {
-            transactionDetail.value = element;
-            console.log('transactionDetail', transactionDetail.value);
-            transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
-            console.log('transactionProduct', transactionProduct.value);
-            transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
-            console.log('transactionSeller', transactionSeller.value);
-            transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
-            console.log('transactionBuyer', transactionBuyer.value);
-          }
-        });
-      }
-    };
+    const transactionDetail = ref([]);
 
     onMounted(async () => {
-      getUserSoldTransactions();
-      getUserBoughtTransactions();
+      transactionDetail.value = await transactionServices.getTransactionById(route.params.id);
+      transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
+      transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
+      transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
     });
 
     const store = useStore();

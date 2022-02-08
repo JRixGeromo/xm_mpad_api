@@ -117,26 +117,10 @@ export default {
     const transactionSeller = ref([]);
     const transactionBuyer = ref([]);
 
-    const getTransactionProduct = async () => {
+    onMounted(async () => {
       transactionProduct.value = await productServices.getProductById(props.transactionDetail.productId);
-      console.log('transactionProduct', transactionProduct.value);
-    };
-
-    const getTransactionSeller = async () => {
       transactionSeller.value = await profileServices.getProfilebyUserId(props.transactionDetail.sellerUserId);
-      console.log('transactionSeller', transactionSeller.value);
-    };
-
-    const getTransactionBuyer = async () => {
       transactionBuyer.value = await profileServices.getProfilebyUserId(props.transactionDetail.buyerUserId);
-      console.log('transactionBuyer', transactionBuyer.value);
-    };
-
-    onMounted(() => {
-      console.log('transactionDetail', props.transactionDetail);
-      getTransactionProduct();
-      getTransactionSeller();
-      getTransactionBuyer();
     });
 
     return {
