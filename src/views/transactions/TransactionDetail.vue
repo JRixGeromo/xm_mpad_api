@@ -65,7 +65,7 @@
                 text-align: center;
                 font-weight: 700;
                 padding: 5px 0;
-                background-color:#FDE07B;
+                background-color:#D76262;
                 border-radius: 10px;
                 "
               >
@@ -79,7 +79,26 @@
       <el-row style="justify-content: center;">
           <el-col :span="14" :xs="24">
               <div style="height:300px; margin:40px 0; white-space: pre;">
-                <el-steps direction="vertical">
+                <ul class="events">
+                  <li>
+                    <time datetime="10:03"></time>
+                    <span>Here 1</span>
+                  </li>
+                  <li>
+                    <time datetime="10:03"></time>
+                    <span>Here 2</span>
+                  </li>
+                  <li>
+                    <time datetime="10:03"></time>
+                    <span>Here 3</span>
+                  </li>
+                  <li>
+                    <time datetime="10:03"></time>
+                    <span>Here 4</span>
+                  </li>
+                </ul>
+
+                <!-- <el-steps direction="vertical">
                   <el-step description=" 02/01/2021 16:45
                       Transaction hash: a1234t235g32f9v4cv
                       desmondzth made a payment of SGD$700.00 via Credit Card
@@ -100,7 +119,7 @@
                       Transaction hash: a1234t235g32f9v4cv
                       desmondzth made an offer of SGD$700.00">
                   </el-step>
-                </el-steps>
+                </el-steps> -->
               </div>
           </el-col>
       </el-row>
@@ -146,5 +165,50 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .events li {
+    display: flex;
+    color: #999;
+  }
 
+  .events time {
+    position: relative;
+    padding: 0 1.5em;  }
+
+  .events time::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    top: 0;
+    transform: translateX(50%);
+    border-radius: 50%;
+    background: #fff;
+    border: 1px #ccc solid;
+    width: .8em;
+    height: .8em;
+  }
+
+  .events span {
+    padding: 0 1.5em 1.5em 1.5em;
+    position: relative;
+  }
+
+  .events span::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    height: 100%;
+    border-left: 1px #ccc solid;
+  }
+
+  .events strong {
+    display: block;
+    font-weight: bolder;
+  }
+
+  .events { margin: 1em; width: 50%; }
+  .events,
+  .events *::before,
+  .events *::after { box-sizing: border-box; font-family: arial; }
 </style>
