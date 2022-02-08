@@ -58,6 +58,8 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import ProductCard from '@/components/Product/ProductCard.vue';
 import CustomTab from '@/components/CustomTab.vue';
+import { CONFIGURATION_NAMES } from '@/common/constants';
+import configurationServices from '@/services/configuration-service';
 
 export default {
   name: 'Listings',
@@ -69,36 +71,25 @@ export default {
     const listings = ref([]);
     const activeTabName = ref('all');
     const sortTabName = ref('Sort By');
-    const tabOptions = ref([
-      {
-        tabName: 'all',
-        tabLabel: 'All',
-      },
-      {
-        tabName: 'dc',
-        tabLabel: 'DC',
-      },
-      {
-        tabName: 'disney',
-        tabLabel: 'Disney',
-      },
-      {
-        tabName: 'hasbro',
-        tabLabel: 'Hasbro',
-      },
-      {
-        tabName: 'marvel',
-        tabLabel: 'Marvel',
-      },
-      {
-        tabName: 'others',
-        tabLabel: 'Others',
-      },
-    ]);
+    const tabOptions = ref([]);
+
+    const getLicenses = async () => {
+      configurationServices.getConfigurationByName(CONFIGURATION_NAMES.productLicense).then((data) => {
+        const raw = data[0].configurations.map((config) => JSON.parse(config.value));
+        tabOptions.value = raw.map((el) => {
+          const res = {
+            tabName: el.name.toLowerCase(),
+            tabLabel: el.name,
+          };
+          return res;
+        });
+      });
+    };
 
     onMounted(async () => {
       const listingRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
       listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      getLicenses();
     });
 
     return {
