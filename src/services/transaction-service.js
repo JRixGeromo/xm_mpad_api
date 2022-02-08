@@ -24,10 +24,28 @@ function payment(paymentDetails) {
     });
 }
 
+function getTransactions() {
+  return MpApiIni().get('/api/mp/transaction/v1/transactions', SetAuthHeader())
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+function getTransactionById(transactionId) {
+  return MpApiIni().get(`/api/mp/transaction/v1/${transactionId}/transaction`, SetAuthHeader())
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
 const services = {
   getUserSoldTransactions,
   getUserBoughtTransactions,
   payment,
+  getTransactions,
+  getTransactionById,
 };
 
 export default services;

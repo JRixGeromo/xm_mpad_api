@@ -55,9 +55,11 @@
 
 <script>
 import { ref, onMounted } from 'vue';
+import { CONFIGURATION_NAMES } from '@/common/constants';
 import TransactionCard from '@/components/Transaction/TransactionCard.vue';
 import transactionServices from '@/services/transaction-service';
 import CustomTab from '@/components/CustomTab.vue';
+import configurationServices from '@/services/configuration-service';
 
 export default {
   name: 'Transactions',
@@ -70,51 +72,34 @@ export default {
     const transactionListLoading = ref(true);
     const activeTabName = ref('all');
     const sortTabName = ref('Sort By');
-    const tabOptions = ref([
-      {
-        tabName: 'all',
-        tabLabel: 'All',
-      },
-      {
-        tabName: 'dc',
-        tabLabel: 'DC',
-      },
-      {
-        tabName: 'disney',
-        tabLabel: 'Disney',
-      },
-      {
-        tabName: 'hasbro',
-        tabLabel: 'Hasbro',
-      },
-      {
-        tabName: 'marvel',
-        tabLabel: 'Marvel',
-      },
-      {
-        tabName: 'others',
-        tabLabel: 'Others',
-      },
-    ]);
+    const tabOptions = ref([]);
 
-    const getUserSoldTransactions = async () => {
-      transactionList.value = await transactionServices.getUserSoldTransactions();
-      transactionListLoading.value = false;
+    const getLicenses = async () => {
+      configurationServices.getConfigurationByName(CONFIGURATION_NAMES.productLicense).then((data) => {
+        const raw = data[0].configurations.map((config) => JSON.parse(config.value));
+        tabOptions.value = raw.map((el) => {
+          const res = {
+            tabName: el.name.toLowerCase(),
+            tabLabel: el.name,
+          };
+          return res;
+        });
+      });
     };
 
-    const getUserBoughtTransactions = async () => {
-      transactionList.value = await transactionServices.getUserBoughtTransactions();
+    const getTransactions = async () => {
+      transactionList.value = await transactionServices.getTransactions();
       transactionListLoading.value = false;
     };
 
     onMounted(async () => {
-      getUserSoldTransactions();
-      getUserBoughtTransactions();
+      getTransactions();
+      getLicenses();
     });
 
     return {
-      activeTabName,
       tabOptions,
+      activeTabName,
       sortTabName,
       transactionList,
       transactionListLoading,

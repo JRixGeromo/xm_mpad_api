@@ -21,8 +21,9 @@
     </el-row>
     <div>
       <el-row style="justify-content: center;">
-          <el-col :span="14" :xs="24">
-              <div style="
+        <el-col :span="14" :xs="24">
+          <div
+            style="
                 justify-content: center;
                 text-align: center;
                 padding: 5px 0;
@@ -30,12 +31,15 @@
                 border-radius: 10px;
                 margin: 10px 0;
                 "
-              >
-                <p><span style="font-weight: 700;">Status:</span> Payment Made
-                  <router-link to="/transaction/1"><u>Details</u></router-link>
-                </p>
-              </div>
-          </el-col>
+          >
+            <p>
+              <span style="font-weight: 700;">Status:</span> Payment Made
+              <router-link to="/transaction/1">
+                <u>Details</u>
+              </router-link>
+            </p>
+          </div>
+        </el-col>
       </el-row>
     </div>
     <el-row v-if="productDetail && sellerDetail">
@@ -62,7 +66,8 @@
         </div>
       </el-col>
       <el-col
-        :span="12" :xs="24"
+        :span="12"
+        :xs="24"
         style="text-align: center; display: flex; align-items: center; justify-content: center; margin: 20px 0;"
         class="hidden-xs-only"
       >
@@ -96,7 +101,9 @@
           <el-col :span="24">
             <div style="width: 100%; padding: 30px 0;">
               <div class="sub-header left-text fs-20" style="margin-bottom: 10px;">What you get</div>
-              <div class="left-text fs-16 product-desc">1. 1:6 scale statue collectible of Batman Rebirth</div>
+              <div
+                class="left-text fs-16 product-desc"
+              >1. 1:6 scale statue collectible of Batman Rebirth</div>
               <div class="left-text fs-16 product-desc">2. Batman Rebirth NFT</div>
               <div class="left-text fs-16 product-desc">3. Access to SN1234567890123456 provenance</div>
             </div>
@@ -149,28 +156,82 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="24" style="margin: 50px 0; justify-content:center;" class="d-flex">
+      <el-col :span="24" style="margin: 50px 0; justify-content:flex-end;" class="d-flex">
         <div style="width: 200px; text-align: center;">
           <p>Something not right?</p>
-          <div style="background-color: #c4c4c4; font-weight:700; padding: 10px 20px;">LOCK LISTING</div>
+          <div
+            style="background-color: #DF0707; font-weight:700; padding: 10px 20px; cursor: pointer; text-transform: uppercase;"
+            @click="dialogLock=true"
+            v-if="isProdictActive"
+          >
+            <i class="fa fa-lock" aria-hidden="true"></i>
+            <span style="padding-left: 10px;">Lock Listing</span>
+          </div>
+          <div
+            style="background-color: #31AC62; font-weight:700; padding: 10px 20px; cursor: pointer; text-transform: uppercase;"
+            @click="dialogLock=true"
+            v-else
+          >
+            <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+            <span style="padding-left: 10px;">UnLock Listing</span>
+          </div>
         </div>
       </el-col>
     </el-row>
   </div>
+  <el-dialog
+    v-if="productDetail"
+    v-model="dialogLock"
+    :title="isProdictActive ? 'Lock Listing?' : 'Unlock Listing?'"
+    :width="isMobileView ? '100%' : '60%'"
+  >
+    <div style="margin-bottom: 20px; color: #000;">
+      <span v-if="isProdictActive">
+        If you find the listing suspicious or inappropriate,
+        you can lock it to prevent the seller from proceeding with the transaction or listing the item on the marketplace,
+        until you can investigate the listing.
+      </span>
+      <span
+        v-else
+      >Unlock the listing to allow the seller to continue selling this product on the marketplace.</span>
+    </div>
+    <el-input
+      v-model="remark"
+      type="textarea"
+      :autosize="{ minRows: 4, maxRows: 6 }"
+      placeholder="Remarks to seller (optional)"
+    />
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button
+          class="font-bold reject-btn custom-btn"
+          @click="dialogLock = false; remark = ''"
+        >CANCEL</el-button>
+        <el-button class="font-bold approve-btn custom-btn" @click="lockAction">CONFIRM</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
 import axios from 'axios';
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { SetAuthHeader } from '@/services/api';
 
 export default {
   setup() {
+    const store = useStore();
+    const isMobileView = computed(() => store.state.layout.isMobileView);
+
     const route = useRoute();
     const sellerDetail = ref(null);
     const productDetail = ref(null);
     const defaultProfileImg = ref(process.env.VUE_APP_DEFAULT_PIC_URL);
     const rate = ref(3.7);
+    const dialogLock = ref(false);
+    const remark = ref('');
 
     const productCharacters = computed(() => {
       if (!productDetail.value.characters) {
@@ -179,9 +240,30 @@ export default {
       return productDetail.value.characters.split(',').join(', ');
     });
 
-    onMounted(async () => {
+    const isProdictActive = computed(() => productDetail.value.status === 'Active');
+
+    const getProductDetail = async () => {
       const productRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/${route.params.id}/product`);
-      productDetail.value = productRes.data;
+      return productRes.data;
+    };
+
+    const lockAction = async () => {
+      const obj = {
+        productId: route.params.id,
+        remark: remark.value,
+      };
+      if (isProdictActive.value) {
+        await axios.put(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/product/lock`, obj, SetAuthHeader());
+      } else {
+        await axios.put(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/product/unlock`, obj, SetAuthHeader());
+      }
+      dialogLock.value = false;
+      remark.value = '';
+      productDetail.value = await getProductDetail();
+    };
+
+    onMounted(async () => {
+      productDetail.value = await getProductDetail();
 
       const profileRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/profile/v1/${productDetail.value.createdByUserId}/profile/user`);
       sellerDetail.value = profileRes.data;
@@ -193,6 +275,11 @@ export default {
       defaultProfileImg,
       rate,
       productCharacters,
+      isMobileView,
+      dialogLock,
+      remark,
+      lockAction,
+      isProdictActive,
     };
   },
 };
