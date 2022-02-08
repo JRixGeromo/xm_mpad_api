@@ -59,7 +59,7 @@
     </div>
     <div>
       <el-row style="justify-content: center;">
-          <el-col :span="14" :xs="24">
+          <el-col :span="10" :xs="24">
               <div style="
                 justify-content: center;
                 text-align: center;
@@ -77,12 +77,12 @@
     </div>
     <div>
       <el-row style="justify-content: center;">
-          <el-col :span="14" :xs="24">
+          <el-col :span="12" :xs="24">
               <div style="height:300px; margin:40px 0; white-space: pre;">
                 <ul class="events">
                   <li>
                     <time datetime="10:03"></time>
-                    <span>Here 1</span>
+                    <span>Here 1 Here 1 Here 1 Here 1 Here 1 Here 1Here 1Here 1</span>
                   </li>
                   <li>
                     <time datetime="10:03"></time>
@@ -172,7 +172,7 @@ export default {
 
   .events time {
     position: relative;
-    padding: 0 1.5em;  }
+    padding: 0;  }
 
   .events time::after {
     content: "";
