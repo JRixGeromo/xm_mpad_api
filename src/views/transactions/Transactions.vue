@@ -13,10 +13,21 @@
       </el-col>
     </el-row>
     <el-row class="hidden-xs-only">
-      <el-col :span="12">
+      <el-col :span="24">
         <h2 class="main-title">Transactions</h2>
       </el-col>
-      <el-col :span="4" :offset="8" class="d-flex-end">
+    </el-row>
+    <el-row class="hidden-xs-only">
+      <el-col :span="4" class="d-flex-start">
+        <div id="filter-bar" @click="showHideFilter">Filter <i class="xm-el-icon-plus"></i>
+          <ul id="filter-div" style="display: none; list-style-type: none;">
+            <li><a href="#">Item 1</a></li>
+            <li><a href="#">Item 2</a></li>
+            <li><a href="#">Item 3</a></li>
+          </ul>
+        </div>
+      </el-col>
+      <el-col :span="4" :offset="16" class="d-flex-end">
         <div class="custom-select">
           <el-select v-model="sortTabName" placeholder="Sort By">
             <el-option value="newest" label="Newest"></el-option>
@@ -60,6 +71,7 @@ import TransactionCard from '@/components/Transaction/TransactionCard.vue';
 import transactionServices from '@/services/transaction-service';
 import CustomTab from '@/components/CustomTab.vue';
 import configurationServices from '@/services/configuration-service';
+import { showHideFilterMenu } from '@/helpers';
 
 export default {
   name: 'Transactions',
@@ -87,6 +99,10 @@ export default {
       });
     };
 
+    const showHideFilter = () => {
+      showHideFilterMenu();
+    };
+
     const getTransactions = async () => {
       transactionList.value = await transactionServices.getTransactions();
       transactionListLoading.value = false;
@@ -103,7 +119,29 @@ export default {
       sortTabName,
       transactionList,
       transactionListLoading,
+      showHideFilter,
     };
   },
 };
 </script>
+<style scoped>
+  #filter-bar {
+      display:inline-block;
+      padding:10px;
+  }
+
+  #filter-bar:hover {
+      cursor:hand;
+      cursor:pointer;
+  }
+
+  #filter-div {
+      display:inline-block;
+      position:absolute;
+      top:35px;
+      left: 0px;
+      background-color:#fff;
+      z-index: 1000;
+      padding: 0px 20px 20px 20px;
+  }
+</style>

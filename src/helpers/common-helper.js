@@ -50,3 +50,12 @@ export function formatDate(date) {
 
   return [year, month, day].join('/');
 }
+
+export function showHideFilterMenu() {
+  const el = document.getElementById('filter-div');
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
