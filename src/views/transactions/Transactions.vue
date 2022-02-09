@@ -69,7 +69,7 @@ export default {
   setup() {
     const transactionList = ref([]);
     const transactionListLoading = ref(true);
-    const activeTabName = ref('all');
+    const activeTabName = ref('All');
     const sortTabName = ref('Sort By');
     const tabOptions = ref([]);
 
