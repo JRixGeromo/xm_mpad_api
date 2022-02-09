@@ -17,12 +17,7 @@
         <h2 class="main-title">Users</h2>
       </el-col>
       <el-col :span="4" :offset="8" class="d-flex-end">
-        <div class="custom-select">
-          <el-select v-model="sortTabName" placeholder="Sort By">
-            <el-option value="newest" label="Newest"></el-option>
-            <el-option value="oldest" label="Oldest"></el-option>
-          </el-select>
-        </div>
+        <SortBy />
       </el-col>
     </el-row>
     <el-row style="margin: 40px 0;">
@@ -63,10 +58,14 @@
 
 <script>
 import { MpApiIni } from '@/services/api';
+import SortBy from '@/components/SortBy.vue';
 import { ref, onMounted } from 'vue';
 
 export default {
   name: 'Users',
+  components: {
+    SortBy,
+  },
   setup() {
     const profiles = ref([]);
     const defaultProfileImg = ref(process.env.VUE_APP_DEFAULT_PIC_URL);

@@ -17,12 +17,7 @@
         <h2 class="main-title">Payments</h2>
       </el-col>
       <el-col :span="4" :offset="8" class="d-flex-end">
-        <div class="custom-select">
-          <el-select v-model="sortTabName" placeholder="Sort By">
-            <el-option value="newest" label="Newest"></el-option>
-            <el-option value="oldest" label="Oldest"></el-option>
-          </el-select>
-        </div>
+        <SortBy />
       </el-col>
     </el-row>
     <el-row style="text-align: cetner; margin-bottom: 2em;">
@@ -30,12 +25,7 @@
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col>
       <el-col :span="12" class="d-flex-end hidden-sm-and-up">
-        <div class="custom-select">
-          <el-select v-model="sortTabName" placeholder="Sort By">
-            <el-option value="newest" label="Newest"></el-option>
-            <el-option value="oldest" label="Oldest"></el-option>
-          </el-select>
-        </div>
+        <SortBy />
       </el-col>
     </el-row>
     <el-row>
@@ -63,12 +53,14 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import PaymentCard from '@/components/Payment/PaymentCard.vue';
 import CustomTab from '@/components/CustomTab.vue';
+import SortBy from '@/components/SortBy.vue';
 
 export default {
   name: 'Listings',
   components: {
     PaymentCard,
     CustomTab,
+    SortBy,
   },
   setup() {
     const listings = ref([]);

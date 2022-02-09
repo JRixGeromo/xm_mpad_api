@@ -19,55 +19,10 @@
     </el-row>
     <el-row class="hidden-xs-only">
       <el-col :span="4" class="d-flex-start">
-        <div id="filter-bar" @click="showHideFilter">Filter <i class="xm-el-icon-plus"></i>
-          <div id="filter-div" style="display: none;">
-            <el-row style="text-align: cetner; margin-bottom: 2em;">
-              <el-col :span="24">
-                <p style="font-weight: bold; margin-bottom: 0px">Licensors</p>
-              </el-col>
-              <el-col :span="12" :xs="24">
-                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
-              </el-col>
-              <el-col :span="12" :xs="24">
-                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
-              </el-col>
-              <el-col :span="12" :xs="24">
-                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
-              </el-col>
-              <el-col :span="12" :xs="24">
-                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
-              </el-col>
-              <el-col :span="12" :xs="24">
-                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
-              </el-col>
-              <el-col :span="12" :xs="24">
-                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
-              </el-col>
-            </el-row>
-            <el-row style="text-align: cetner; margin-bottom: 2em;">
-              <el-col :span="24">
-                <p style="font-weight: bold; margin-bottom: 0px">Status</p>
-              </el-col>
-              <el-col :span="24">
-                <el-radio v-model="radio1" label="1" size="large">All</el-radio>
-              </el-col>
-              <el-col :span="24">
-                <el-radio v-model="radio1" label="1" size="large">Pending</el-radio>
-              </el-col>
-              <el-col :span="24">
-                <el-radio v-model="radio1" label="1" size="large">Completed</el-radio>
-              </el-col>
-            </el-row>
-          </div>
-        </div>
+        <Filter/>
       </el-col>
       <el-col :span="4" :offset="16" class="d-flex-end">
-        <div class="custom-select">
-          <el-select v-model="sortTabName" placeholder="Sort By">
-            <el-option value="newest" label="Newest"></el-option>
-            <el-option value="oldest" label="Oldest"></el-option>
-          </el-select>
-        </div>
+        <SortBy />
       </el-col>
     </el-row>
     <el-row style="text-align: cetner; margin-bottom: 2em;">
@@ -75,12 +30,7 @@
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col>
       <el-col :span="12" class="d-flex-end hidden-sm-and-up">
-        <div class="custom-select">
-          <el-select v-model="sortTabName" placeholder="Sort By">
-            <el-option value="newest" label="Newest"></el-option>
-            <el-option value="oldest" label="Oldest"></el-option>
-          </el-select>
-        </div>
+        <SortBy />
       </el-col>
     </el-row>
     <el-row>
@@ -104,14 +54,17 @@ import { CONFIGURATION_NAMES } from '@/common/constants';
 import TransactionCard from '@/components/Transaction/TransactionCard.vue';
 import transactionServices from '@/services/transaction-service';
 import CustomTab from '@/components/CustomTab.vue';
+import SortBy from '@/components/SortBy.vue';
+import Filter from '@/components/Filter.vue';
 import configurationServices from '@/services/configuration-service';
-import { showHideFilterMenu } from '@/helpers';
 
 export default {
   name: 'Transactions',
   components: {
     TransactionCard,
     CustomTab,
+    Filter,
+    SortBy,
   },
   setup() {
     const transactionList = ref([]);
@@ -133,10 +86,6 @@ export default {
       });
     };
 
-    const showHideFilter = () => {
-      showHideFilterMenu();
-    };
-
     const getTransactions = async () => {
       transactionList.value = await transactionServices.getTransactions();
       transactionListLoading.value = false;
@@ -153,30 +102,7 @@ export default {
       sortTabName,
       transactionList,
       transactionListLoading,
-      showHideFilter,
     };
   },
 };
 </script>
-<style scoped>
-  #filter-bar {
-      display:inline-block;
-      padding:10px;
-  }
-
-  #filter-bar:hover {
-      cursor:hand;
-      cursor:pointer;
-  }
-
-  #filter-div {
-      display:inline-block;
-      position:absolute;
-      top:55px;
-      left: 0px;
-      background-color:#fff;
-      z-index: 1000;
-      padding: 0px 20px 20px 20px;
-      max-width: 400px;
-  }
-</style>
