@@ -48,3 +48,8 @@ export default {
   },
 };
 </script>
+<style>
+  .custom-tab .tab-item {
+    width: 120px;
+  }
+</style>
