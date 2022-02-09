@@ -18,13 +18,47 @@
       </el-col>
     </el-row>
     <el-row class="hidden-xs-only">
-      <el-col :span="4" class="d-flex-start">
+      <el-col :span="10" class="d-flex-start">
         <div id="filter-bar" @click="showHideFilter">Filter <i class="xm-el-icon-plus"></i>
-          <ul id="filter-div" style="display: none; list-style-type: none;">
-            <li><a href="#">Item 1</a></li>
-            <li><a href="#">Item 2</a></li>
-            <li><a href="#">Item 3</a></li>
-          </ul>
+          <div id="filter-div" style="display: none;">
+            <el-row style="text-align: cetner; margin-bottom: 2em;">
+              <el-col :span="24">
+                <p style="font-weight: bold; margin-bottom: 0px">Licensors</p>
+              </el-col>
+              <el-col :span="12" :xs="24">
+                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
+              </el-col>
+              <el-col :span="12" :xs="24">
+                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
+              </el-col>
+              <el-col :span="12" :xs="24">
+                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
+              </el-col>
+              <el-col :span="12" :xs="24">
+                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
+              </el-col>
+              <el-col :span="12" :xs="24">
+                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
+              </el-col>
+              <el-col :span="12" :xs="24">
+                <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
+              </el-col>
+            </el-row>
+            <el-row style="text-align: cetner; margin-bottom: 2em;">
+              <el-col :span="24">
+                <p style="font-weight: bold; margin-bottom: 0px">Status</p>
+              </el-col>
+              <el-col :span="24">
+                <el-radio v-model="radio1" label="1" size="large">All</el-radio>
+              </el-col>
+              <el-col :span="24">
+                <el-radio v-model="radio1" label="1" size="large">Pending</el-radio>
+              </el-col>
+              <el-col :span="24">
+                <el-radio v-model="radio1" label="1" size="large">Completed</el-radio>
+              </el-col>
+            </el-row>
+          </div>
         </div>
       </el-col>
       <el-col :span="4" :offset="16" class="d-flex-end">
@@ -138,10 +172,11 @@ export default {
   #filter-div {
       display:inline-block;
       position:absolute;
-      top:35px;
+      top:55px;
       left: 0px;
       background-color:#fff;
       z-index: 1000;
       padding: 0px 20px 20px 20px;
+      max-width: 400px;
   }
 </style>
