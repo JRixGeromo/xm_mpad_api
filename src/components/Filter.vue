@@ -3,7 +3,7 @@
         <div id="filter-div" style="display: none;">
         <el-row style="text-align: cetner; margin-bottom: 2em;">
             <el-col :span="24">
-            <p style="font-weight: bold; margin-bottom: 0px">Licensors</p>
+            <p style="font-weight: bold; margin-bottom: 0px; margin-top: 0px">Licensors</p>
             </el-col>
             <el-col :span="12" :xs="24">
             <el-checkbox v-model="checked1" label="Option 1" size="large"></el-checkbox>
