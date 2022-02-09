@@ -18,7 +18,7 @@
       </el-col>
     </el-row>
     <el-row class="hidden-xs-only">
-      <el-col :span="10" class="d-flex-start">
+      <el-col :span="4" class="d-flex-start">
         <div id="filter-bar" @click="showHideFilter">Filter <i class="xm-el-icon-plus"></i>
           <div id="filter-div" style="display: none;">
             <el-row style="text-align: cetner; margin-bottom: 2em;">
