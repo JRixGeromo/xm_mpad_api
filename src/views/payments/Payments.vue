@@ -22,7 +22,7 @@
     </el-row>
     <el-row style="text-align: cetner; margin-bottom: 2em;">
       <el-col :span="24" :xs="12">
-        <CustomTab v-model="activeTabName" :tabs="tabOptions" />
+        <CustomTab v-model="activeTabName" />
       </el-col>
       <el-col :span="12" class="d-flex-end hidden-sm-and-up">
         <SortBy />
