@@ -22,7 +22,7 @@
     </el-row>
     <el-row style="text-align: center; margin: 20px 0 40px 0; padding: 0 10px;">
       <el-col :span="24" :xs="12">
-        <CustomTab v-model="activeTabName"/>
+        <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col>
       <el-col :span="12" class="d-flex-end hidden-sm-and-up">
         <SortBy />
@@ -49,6 +49,8 @@ import { ref, onMounted } from 'vue';
 import ProductCard from '@/components/Product/ProductCard.vue';
 import CustomTab from '@/components/CustomTab.vue';
 import SortBy from '@/components/SortBy.vue';
+import { CONFIGURATION_NAMES } from '@/common/constants';
+import configurationServices from '@/services/configuration-service';
 
 export default {
   name: 'Listings',
@@ -59,17 +61,33 @@ export default {
   },
   setup() {
     const listings = ref([]);
-    const activeTabName = ref('All');
+    const activeTabName = ref('all');
     const sortTabName = ref('Sort By');
+    const tabOptions = ref([]);
+
+    const getLicenses = async () => {
+      configurationServices.getConfigurationByName(CONFIGURATION_NAMES.productLicense).then((data) => {
+        const raw = data[0].configurations.map((config) => JSON.parse(config.value));
+        tabOptions.value = raw.map((el) => {
+          const res = {
+            tabName: el.name.toLowerCase(),
+            tabLabel: el.name,
+          };
+          return res;
+        });
+      });
+    };
 
     onMounted(async () => {
       const listingRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
       listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      getLicenses();
     });
 
     return {
       listings,
       activeTabName,
+      tabOptions,
       sortTabName,
     };
   },

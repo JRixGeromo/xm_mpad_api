@@ -26,11 +26,13 @@
 </template>
 
 <script>
-import { CONFIGURATION_NAMES } from '@/common/constants';
-import configurationServices from '@/services/configuration-service';
 
 export default {
   props: {
+    tabs: {
+      type: Array,
+      required: true,
+    },
     modelValue: String,
   },
   emits: ['update:modelValue'],
@@ -42,20 +44,7 @@ export default {
   data() {
     return {
       tabName: this.modelValue,
-      tabs: null,
     };
-  },
-  async mounted() {
-    await configurationServices.getConfigurationByName(CONFIGURATION_NAMES.productLicense).then((data) => {
-      const raw = data[0].configurations.map((config) => JSON.parse(config.value));
-      this.tabs = raw.map((el) => {
-        const res = {
-          tabName: el.name.toLowerCase(),
-          tabLabel: el.name,
-        };
-        return res;
-      });
-    });
   },
 };
 </script>

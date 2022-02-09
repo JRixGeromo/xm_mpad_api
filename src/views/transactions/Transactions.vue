@@ -27,7 +27,7 @@
     </el-row>
     <el-row style="text-align: cetner; margin-bottom: 2em;">
       <el-col :span="24" :xs="12">
-        <CustomTab v-model="activeTabName"/>
+        <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col>
       <el-col :span="12" class="d-flex-end hidden-sm-and-up">
         <SortBy />
@@ -50,11 +50,13 @@
 
 <script>
 import { ref, onMounted } from 'vue';
+import { CONFIGURATION_NAMES } from '@/common/constants';
 import TransactionCard from '@/components/Transaction/TransactionCard.vue';
 import transactionServices from '@/services/transaction-service';
 import CustomTab from '@/components/CustomTab.vue';
 import SortBy from '@/components/SortBy.vue';
 import Filter from '@/components/Filter.vue';
+import configurationServices from '@/services/configuration-service';
 
 export default {
   name: 'Transactions',
@@ -69,6 +71,20 @@ export default {
     const transactionListLoading = ref(true);
     const activeTabName = ref('All');
     const sortTabName = ref('Sort By');
+    const tabOptions = ref([]);
+
+    const getLicenses = async () => {
+      configurationServices.getConfigurationByName(CONFIGURATION_NAMES.productLicense).then((data) => {
+        const raw = data[0].configurations.map((config) => JSON.parse(config.value));
+        tabOptions.value = raw.map((el) => {
+          const res = {
+            tabName: el.name.toLowerCase(),
+            tabLabel: el.name,
+          };
+          return res;
+        });
+      });
+    };
 
     const getTransactions = async () => {
       transactionList.value = await transactionServices.getTransactions();
@@ -77,9 +93,11 @@ export default {
 
     onMounted(async () => {
       getTransactions();
+      getLicenses();
     });
 
     return {
+      tabOptions,
       activeTabName,
       sortTabName,
       transactionList,
