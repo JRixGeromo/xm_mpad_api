@@ -8,7 +8,7 @@
                 <el-option
                     v-for="sort in sortOptions"
                     v-bind:value="sort.label"
-                    v-bind:key="sort.value"
+                    v-bind:key="sort.label"
                     >
                     {{ sort.label }}
                 </el-option>
@@ -29,11 +29,9 @@ export default {
       sortBy: null,
       sortOptions: [
         {
-          value: 'newest',
           label: 'Newest',
         },
         {
-          value: 'oldest',
           label: 'Oldest',
         },
       ],
