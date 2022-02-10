@@ -34,7 +34,7 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col v-for="transaction in transactionList" :key="transaction.id" :xs="24" :sm="24">
+      <el-col v-for="transaction in currentTransactionsList" :key="transaction.id" :xs="24" :sm="24">
         <div style="padding: 20px; border: 1px solid #C4C4C4; margin-bottom: 10px;">
           <TransactionCard :transactionDetail="transaction" />
         </div>
@@ -42,7 +42,14 @@
     </el-row>
     <el-row class="py-10">
       <el-col :span="24" class="d-flex-end">
-        <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
       </el-col>
     </el-row>
   </div>
@@ -67,11 +74,18 @@ export default {
     SortBy,
   },
   setup() {
-    const transactionList = ref([]);
-    const transactionListLoading = ref(true);
+    const transactionsList = ref([]);
+    const currentTransactionsList = ref([]);
+    const transactionsListLoading = ref(true);
     const activeTabName = ref('All');
     const sortTabName = ref('Sort By');
     const tabOptions = ref([]);
+    const pagination = ref({
+      itemPerPage: 2,
+      totalRecord: 0,
+      currentPage: 0,
+    });
+    const paginationTimeout = ref(null);
 
     const getLicenses = async () => {
       configurationServices.getConfigurationByName(CONFIGURATION_NAMES.productLicense).then((data) => {
@@ -86,9 +100,31 @@ export default {
       });
     };
 
+    const getTransaction = (params) => {
+      const paginationDetails = {
+        itemPerPage: params.itemPerPage,
+        totalRecord: transactionsList.value.length,
+        currentPage: params.currentPage,
+      };
+      const data = {
+        pagination: paginationDetails,
+        data: transactionsList.value.slice(
+          (params.itemPerPage * params.currentPage),
+          (params.itemPerPage * (params.currentPage + 1)),
+        ),
+      };
+      return data;
+    };
+
     const getTransactions = async (sortBy) => {
-      transactionList.value = await transactionServices.getTransactions();
-      transactionListLoading.value = false;
+      transactionsList.value = await transactionServices.getTransactions();
+      currentTransactionsList.value = transactionsList.value;
+      transactionsListLoading.value = false;
+      const transacationList = getTransaction({
+        ...pagination.value,
+      });
+      currentTransactionsList.value = transacationList.data;
+      pagination.value = transacationList.pagination;
       console.log(sortBy); // sort the data here
     };
 
@@ -101,14 +137,44 @@ export default {
       getLicenses();
     });
 
+    const paginationCallback = (page) => {
+      console.log('paginationCallback');
+      console.log('page', page);
+      const newPagination = {
+        ...pagination.value,
+        currentPage: page - 1,
+      };
+      console.log('paginationCallback newPagination', newPagination);
+      const transactionLists = getTransaction({
+        ...newPagination,
+      });
+      console.log('paginationCallback transactionsList', transactionLists);
+      paginationTimeout.value = setTimeout(() => {
+        currentTransactionsList.value = transactionLists.data;
+      }, 1);
+      pagination.value = transactionLists.pagination;
+    };
+
     return {
       getSortBy,
       tabOptions,
       activeTabName,
       sortTabName,
-      transactionList,
-      transactionListLoading,
+      transactionsList,
+      currentTransactionsList,
+      transactionsListLoading,
+      pagination,
+      paginationCallback,
     };
   },
+  /* watch: {
+    transactionsList() {
+      const transacationList = this.getTransaction({
+        ...this.pagination,
+      });
+      this.transactionsList = transacationList.data;
+      this.pagination = transacationList.pagination;
+    },
+  }, */
 };
 </script>
