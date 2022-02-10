@@ -22,7 +22,7 @@
         <Filter/>
       </el-col>
       <el-col :span="4" :offset="16" class="d-flex-end">
-        <SortBy />
+        <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
     <el-row style="text-align: cetner; margin-bottom: 2em;">
@@ -30,7 +30,7 @@
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col>
       <el-col :span="12" class="d-flex-end hidden-sm-and-up">
-        <SortBy />
+        <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
     <el-row>
@@ -86,17 +86,23 @@ export default {
       });
     };
 
-    const getTransactions = async () => {
+    const getTransactions = async (sortBy) => {
       transactionList.value = await transactionServices.getTransactions();
       transactionListLoading.value = false;
+      console.log(sortBy); // sort the data here
+    };
+
+    const getSortBy = (sortBy) => {
+      getTransactions(sortBy);
     };
 
     onMounted(async () => {
-      getTransactions();
+      getTransactions('Newest');
       getLicenses();
     });
 
     return {
+      getSortBy,
       tabOptions,
       activeTabName,
       sortTabName,

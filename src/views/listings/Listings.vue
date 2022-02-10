@@ -17,7 +17,7 @@
         <h2 class="main-title">Listings</h2>
       </el-col>
       <el-col :span="4" :offset="8" class="d-flex-end">
-        <SortBy />
+        <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
     <el-row style="text-align: center; margin: 20px 0 40px 0; padding: 0 10px;">
@@ -25,7 +25,7 @@
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col>
       <el-col :span="12" class="d-flex-end hidden-sm-and-up">
-        <SortBy />
+        <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
     <el-row>
@@ -78,17 +78,28 @@ export default {
       });
     };
 
-    onMounted(async () => {
+    const getProducts = async (sortBy) => {
       const listingRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
+      console.log(sortBy); // sort the data here
       listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+    };
+
+    onMounted(async () => {
+      getProducts('Newest');
       getLicenses();
     });
+
+    const getSortBy = (sortBy) => {
+      getProducts(sortBy);
+    };
 
     return {
       listings,
       activeTabName,
       tabOptions,
       sortTabName,
+      getProducts,
+      getSortBy,
     };
   },
 };

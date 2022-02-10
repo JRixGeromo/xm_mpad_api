@@ -17,7 +17,7 @@
         <h2 class="main-title">Users</h2>
       </el-col>
       <el-col :span="4" :offset="8" class="d-flex-end">
-        <SortBy />
+        <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
     <el-row style="margin: 40px 0;">
@@ -71,7 +71,8 @@ export default {
     const defaultProfileImg = ref(process.env.VUE_APP_DEFAULT_PIC_URL);
     const sortTabName = ref('Sort By');
 
-    const retreiveProfiles = () => {
+    const retreiveProfiles = (sortBy) => {
+      console.log(sortBy);
       MpApiIni()
         .get('/api/mp/profile/v1/profiles')
         .then((res) => {
@@ -79,14 +80,19 @@ export default {
         });
     };
 
+    const getSortBy = (sortBy) => {
+      retreiveProfiles(sortBy);
+    };
+
     onMounted(() => {
-      retreiveProfiles();
+      retreiveProfiles('Newest');
     });
 
     return {
       profiles,
       defaultProfileImg,
       sortTabName,
+      getSortBy,
     };
   },
 };
