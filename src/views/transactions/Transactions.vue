@@ -106,7 +106,7 @@ export default {
       });
     };
 
-    const getTransaction = (params) => {
+    const slicePage = (params) => {
       const paginationDetails = {
         itemPerPage: params.itemPerPage,
         totalRecord: transactionsList.value.length,
@@ -142,7 +142,7 @@ export default {
         ...pagination.value,
         currentPage: page - 1,
       };
-      const transDataList = getTransaction({
+      const transDataList = slicePage({
         ...newPagination,
       });
       dataList.value = [];
@@ -152,7 +152,7 @@ export default {
       pagination.value = transDataList.pagination;
     };
     watch(transactionsList, () => {
-      const transDataList = getTransaction({
+      const transDataList = slicePage({
         ...pagination.value,
       });
       dataList.value = transDataList.data;
