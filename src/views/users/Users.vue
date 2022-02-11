@@ -20,8 +20,20 @@
         <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
+    <el-row class="py-10">
+      <el-col :span="24" class="d-flex-end">
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
+      </el-col>
+    </el-row>
     <el-row style="margin: 40px 0;">
-      <el-col v-for="profile in profiles" :key="profile.profileId" :xs="24" :sm="6">
+      <el-col v-for="profile in dataList" :key="profile.profileId" :xs="24" :sm="6">
         <router-link :to="{ path: '/user/'+ profile.profileId}">
           <div class="profile-container">
             <div>
@@ -50,7 +62,14 @@
     </el-row>
     <el-row class="py-10">
       <el-col :span="24" class="d-flex-end">
-        <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
       </el-col>
     </el-row>
   </div>
@@ -59,7 +78,7 @@
 <script>
 import { MpApiIni } from '@/services/api';
 import SortBy from '@/components/SortBy.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeMount, watch } from 'vue';
 
 export default {
   name: 'Users',
@@ -70,6 +89,19 @@ export default {
     const profiles = ref([]);
     const defaultProfileImg = ref(process.env.VUE_APP_DEFAULT_PIC_URL);
     const sortTabName = ref('Sort By');
+    const pagination = ref({
+      itemPerPage: 8,
+      totalRecord: 0,
+      currentPage: 0,
+    });
+    const paginationTimeout = ref([]);
+    const dataList = ref([]);
+
+    onBeforeMount(() => {
+      if (paginationTimeout.value.length > 0) {
+        clearTimeout(paginationTimeout.value);
+      }
+    });
 
     const retreiveProfiles = (sortBy) => {
       console.log(sortBy);
@@ -80,6 +112,22 @@ export default {
         });
     };
 
+    const slicePage = (params) => {
+      const paginationDetails = {
+        itemPerPage: params.itemPerPage,
+        totalRecord: profiles.value.length,
+        currentPage: params.currentPage,
+      };
+      const data = {
+        pagination: paginationDetails,
+        data: profiles.value.slice(
+          (params.itemPerPage * params.currentPage),
+          (params.itemPerPage * (params.currentPage + 1)),
+        ),
+      };
+      return data;
+    };
+
     const getSortBy = (sortBy) => {
       retreiveProfiles(sortBy);
     };
@@ -88,11 +136,36 @@ export default {
       retreiveProfiles('Newest');
     });
 
+    const paginationCallback = (page) => {
+      const newPagination = {
+        ...pagination.value,
+        currentPage: page - 1,
+      };
+      const transDataList = slicePage({
+        ...newPagination,
+      });
+      dataList.value = [];
+      paginationTimeout.value = setTimeout(() => {
+        dataList.value = transDataList.data;
+      }, 1);
+      pagination.value = transDataList.pagination;
+    };
+    watch(profiles, () => {
+      const transDataList = slicePage({
+        ...pagination.value,
+      });
+      dataList.value = transDataList.data;
+      pagination.value = transDataList.pagination;
+    });
+
     return {
       profiles,
       defaultProfileImg,
       sortTabName,
       getSortBy,
+      dataList,
+      pagination,
+      paginationCallback,
     };
   },
 };

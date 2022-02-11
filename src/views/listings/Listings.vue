@@ -28,8 +28,20 @@
         <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
+    <el-row class="py-10">
+      <el-col :span="24" class="d-flex-end">
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
+      </el-col>
+    </el-row>
     <el-row>
-      <el-col v-for="product in listings" :key="product.id" :xs="24" :sm="8" class="px-10">
+      <el-col v-for="product in dataList" :key="product.id" :xs="24" :sm="8" class="px-10">
         <router-link :to="{ path: '/product/'+ product.productId}">
           <ProductCard :productDetail="product" />
         </router-link>
@@ -37,7 +49,14 @@
     </el-row>
     <el-row class="py-10">
       <el-col :span="24" class="d-flex-end">
-        <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
       </el-col>
     </el-row>
   </div>
@@ -45,7 +64,7 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeMount, watch } from 'vue';
 import ProductCard from '@/components/Product/ProductCard.vue';
 import CustomTab from '@/components/CustomTab.vue';
 import SortBy from '@/components/SortBy.vue';
@@ -64,6 +83,19 @@ export default {
     const activeTabName = ref('all');
     const sortTabName = ref('Sort By');
     const tabOptions = ref([]);
+    const pagination = ref({
+      itemPerPage: 9,
+      totalRecord: 0,
+      currentPage: 0,
+    });
+    const paginationTimeout = ref([]);
+    const dataList = ref([]);
+
+    onBeforeMount(() => {
+      if (paginationTimeout.value.length > 0) {
+        clearTimeout(paginationTimeout.value);
+      }
+    });
 
     const getLicenses = async () => {
       configurationServices.getConfigurationByName(CONFIGURATION_NAMES.productLicense).then((data) => {
@@ -76,6 +108,22 @@ export default {
           return res;
         });
       });
+    };
+
+    const slicePage = (params) => {
+      const paginationDetails = {
+        itemPerPage: params.itemPerPage,
+        totalRecord: listings.value.length,
+        currentPage: params.currentPage,
+      };
+      const data = {
+        pagination: paginationDetails,
+        data: listings.value.slice(
+          (params.itemPerPage * params.currentPage),
+          (params.itemPerPage * (params.currentPage + 1)),
+        ),
+      };
+      return data;
     };
 
     const getProducts = async (sortBy) => {
@@ -93,6 +141,28 @@ export default {
       getProducts(sortBy);
     };
 
+    const paginationCallback = (page) => {
+      const newPagination = {
+        ...pagination.value,
+        currentPage: page - 1,
+      };
+      const transDataList = slicePage({
+        ...newPagination,
+      });
+      dataList.value = [];
+      paginationTimeout.value = setTimeout(() => {
+        dataList.value = transDataList.data;
+      }, 1);
+      pagination.value = transDataList.pagination;
+    };
+    watch(listings, () => {
+      const transDataList = slicePage({
+        ...pagination.value,
+      });
+      dataList.value = transDataList.data;
+      pagination.value = transDataList.pagination;
+    });
+
     return {
       listings,
       activeTabName,
@@ -100,6 +170,9 @@ export default {
       sortTabName,
       getProducts,
       getSortBy,
+      dataList,
+      pagination,
+      paginationCallback,
     };
   },
 };

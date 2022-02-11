@@ -28,8 +28,20 @@
         <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
+    <el-row class="py-10">
+      <el-col :span="24" class="d-flex-end">
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
+      </el-col>
+    </el-row>
     <el-row>
-      <el-col v-for="product in listings" :key="product.id" :xs="24" :sm="24">
+      <el-col v-for="product in dataList" :key="product.id" :xs="24" :sm="24">
         <div style="padding: 20px; border: 1px solid #C4C4C4; margin-bottom: 10px;">
           <PaymentCard :productDetail="product" />
         </div>
@@ -42,7 +54,14 @@
     </el-row>
     <el-row class="py-10">
       <el-col :span="24" class="d-flex-end">
-        <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
       </el-col>
     </el-row>
   </div>
@@ -50,7 +69,7 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeMount, watch } from 'vue';
 import PaymentCard from '@/components/Payment/PaymentCard.vue';
 import CustomTab from '@/components/CustomTab.vue';
 import SortBy from '@/components/SortBy.vue';
@@ -76,11 +95,40 @@ export default {
         tabLabel: 'Completed',
       },
     ]);
+    const pagination = ref({
+      itemPerPage: 8,
+      totalRecord: 0,
+      currentPage: 0,
+    });
+    const paginationTimeout = ref([]);
+    const dataList = ref([]);
+
+    onBeforeMount(() => {
+      if (paginationTimeout.value.length > 0) {
+        clearTimeout(paginationTimeout.value);
+      }
+    });
 
     const getProducts = async (sortBy) => {
       const listingRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
       listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
       console.log(sortBy);
+    };
+
+    const slicePage = (params) => {
+      const paginationDetails = {
+        itemPerPage: params.itemPerPage,
+        totalRecord: listings.value.length,
+        currentPage: params.currentPage,
+      };
+      const data = {
+        pagination: paginationDetails,
+        data: listings.value.slice(
+          (params.itemPerPage * params.currentPage),
+          (params.itemPerPage * (params.currentPage + 1)),
+        ),
+      };
+      return data;
     };
 
     onMounted(async () => {
@@ -91,12 +139,37 @@ export default {
       getProducts(sortBy);
     };
 
+    const paginationCallback = (page) => {
+      const newPagination = {
+        ...pagination.value,
+        currentPage: page - 1,
+      };
+      const transDataList = slicePage({
+        ...newPagination,
+      });
+      dataList.value = [];
+      paginationTimeout.value = setTimeout(() => {
+        dataList.value = transDataList.data;
+      }, 1);
+      pagination.value = transDataList.pagination;
+    };
+    watch(listings, () => {
+      const transDataList = slicePage({
+        ...pagination.value,
+      });
+      dataList.value = transDataList.data;
+      pagination.value = transDataList.pagination;
+    });
+
     return {
       listings,
       activeTabName,
       tabOptions,
       sortTabName,
       getSortBy,
+      dataList,
+      pagination,
+      paginationCallback,
     };
   },
 };
