@@ -81,7 +81,7 @@ export default {
     const sortTabName = ref('Sort By');
     const tabOptions = ref([]);
     const pagination = ref({
-      itemPerPage: 2,
+      itemPerPage: 50,
       totalRecord: 0,
       currentPage: 0,
     });
