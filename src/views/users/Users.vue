@@ -32,7 +32,7 @@
         ></el-pagination>
       </el-col>
     </el-row>
-    <el-row style="margin: 40px 0;">
+    <el-row v-if="dataList" style="margin: 40px 0;">
       <el-col v-for="profile in dataList" :key="profile.profileId" :xs="24" :sm="6">
         <router-link :to="{ path: '/user/'+ profile.profileId}">
           <div class="profile-container">
@@ -60,6 +60,11 @@
         </router-link>
       </el-col>
     </el-row>
+    <el-row v-else style="margin: 40px 0;">
+      <el-col v-for="index in 4" :key="index" :xs="24" :sm="6">
+        <UserLoader />
+      </el-col>
+    </el-row>
     <el-row class="py-10">
       <el-col :span="24" class="d-flex-end">
         <el-pagination
@@ -78,12 +83,14 @@
 <script>
 import { MpApiIni } from '@/services/api';
 import SortBy from '@/components/SortBy.vue';
+import UserLoader from '@/components/User/UserLoader.vue';
 import { ref, onMounted, onBeforeMount, watch } from 'vue';
 
 export default {
   name: 'Users',
   components: {
     SortBy,
+    UserLoader,
   },
   setup() {
     const profiles = ref([]);
@@ -95,7 +102,7 @@ export default {
       currentPage: 0,
     });
     const paginationTimeout = ref([]);
-    const dataList = ref([]);
+    const dataList = ref(null);
 
     onBeforeMount(() => {
       if (paginationTimeout.value.length > 0) {
@@ -141,21 +148,21 @@ export default {
         ...pagination.value,
         currentPage: page - 1,
       };
-      const transDataList = slicePage({
+      const usersDataList = slicePage({
         ...newPagination,
       });
       dataList.value = [];
       paginationTimeout.value = setTimeout(() => {
-        dataList.value = transDataList.data;
+        dataList.value = usersDataList.data;
       }, 1);
-      pagination.value = transDataList.pagination;
+      pagination.value = usersDataList.pagination;
     };
     watch(profiles, () => {
-      const transDataList = slicePage({
+      const usersDataList = slicePage({
         ...pagination.value,
       });
-      dataList.value = transDataList.data;
-      pagination.value = transDataList.pagination;
+      dataList.value = usersDataList.data;
+      pagination.value = usersDataList.pagination;
     });
 
     return {

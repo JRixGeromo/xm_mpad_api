@@ -40,11 +40,16 @@
         ></el-pagination>
       </el-col>
     </el-row>
-    <el-row>
+    <el-row v-if="dataList">
       <el-col v-for="product in dataList" :key="product.id" :xs="24" :sm="8" class="px-10">
         <router-link :to="{ path: '/product/'+ product.productId}">
           <ProductCard :productDetail="product" />
         </router-link>
+      </el-col>
+    </el-row>
+    <el-row v-else>
+      <el-col v-for="index in 4" :key="index" :xs="24" :sm="8" class="px-10">
+        <ProductCardLoader />
       </el-col>
     </el-row>
     <el-row class="py-10">
@@ -66,6 +71,7 @@
 import axios from 'axios';
 import { ref, onMounted, onBeforeMount, watch } from 'vue';
 import ProductCard from '@/components/Product/ProductCard.vue';
+import ProductCardLoader from '@/components/Product/ProductCardLoader.vue';
 import CustomTab from '@/components/CustomTab.vue';
 import SortBy from '@/components/SortBy.vue';
 import { CONFIGURATION_NAMES } from '@/common/constants';
@@ -75,6 +81,7 @@ export default {
   name: 'Listings',
   components: {
     ProductCard,
+    ProductCardLoader,
     CustomTab,
     SortBy,
   },
@@ -89,7 +96,7 @@ export default {
       currentPage: 0,
     });
     const paginationTimeout = ref([]);
-    const dataList = ref([]);
+    const dataList = ref(null);
 
     onBeforeMount(() => {
       if (paginationTimeout.value.length > 0) {
@@ -146,21 +153,21 @@ export default {
         ...pagination.value,
         currentPage: page - 1,
       };
-      const transDataList = slicePage({
+      const prodDataList = slicePage({
         ...newPagination,
       });
       dataList.value = [];
       paginationTimeout.value = setTimeout(() => {
-        dataList.value = transDataList.data;
+        dataList.value = prodDataList.data;
       }, 1);
-      pagination.value = transDataList.pagination;
+      pagination.value = prodDataList.pagination;
     };
     watch(listings, () => {
-      const transDataList = slicePage({
+      const prodDataList = slicePage({
         ...pagination.value,
       });
-      dataList.value = transDataList.data;
-      pagination.value = transDataList.pagination;
+      dataList.value = prodDataList.data;
+      pagination.value = prodDataList.pagination;
     });
 
     return {

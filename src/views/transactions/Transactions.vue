@@ -45,11 +45,16 @@
         ></el-pagination>
       </el-col>
     </el-row>
-    <el-row>
+    <el-row v-if="dataList">
       <el-col v-for="transaction in dataList" :key="transaction.id" :xs="24" :sm="24">
         <div style="padding: 20px; border: 1px solid #C4C4C4; margin-bottom: 10px;">
           <TransactionCard :transactionDetail="transaction" />
         </div>
+      </el-col>
+    </el-row>
+    <el-row v-else>
+      <el-col v-for="index in 4" :key="index" :span="24" class="px-10">
+        <TransactionCardLoader />
       </el-col>
     </el-row>
     <el-row class="py-10">
@@ -71,6 +76,7 @@
 import { ref, onMounted, onBeforeMount, watch } from 'vue';
 import { CONFIGURATION_NAMES } from '@/common/constants';
 import TransactionCard from '@/components/Transaction/TransactionCard.vue';
+import TransactionCardLoader from '@/components/Transaction/TransactionCardLoader.vue';
 import transactionServices from '@/services/transaction-service';
 import CustomTab from '@/components/CustomTab.vue';
 import SortBy from '@/components/SortBy.vue';
@@ -81,6 +87,7 @@ export default {
   name: 'Transactions',
   components: {
     TransactionCard,
+    TransactionCardLoader,
     CustomTab,
     Filter,
     SortBy,
@@ -97,7 +104,7 @@ export default {
       currentPage: 0,
     });
     const paginationTimeout = ref([]);
-    const dataList = ref([]);
+    const dataList = ref(null);
 
     onBeforeMount(() => {
       if (paginationTimeout.value.length > 0) {

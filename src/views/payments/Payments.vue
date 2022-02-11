@@ -40,11 +40,16 @@
         ></el-pagination>
       </el-col>
     </el-row>
-    <el-row>
+    <el-row v-if="dataList">
       <el-col v-for="product in dataList" :key="product.id" :xs="24" :sm="24">
         <div style="padding: 20px; border: 1px solid #C4C4C4; margin-bottom: 10px;">
           <PaymentCard :productDetail="product" />
         </div>
+      </el-col>
+    </el-row>
+    <el-row v-else>
+      <el-col v-for="index in 4" :key="index" :span="24" class="px-10">
+        <TransactionCardLoader />
       </el-col>
     </el-row>
     <el-row v-if="activeTabName == 'completed' " style="padding: 40px 0;">
@@ -71,6 +76,7 @@
 import axios from 'axios';
 import { ref, onMounted, onBeforeMount, watch } from 'vue';
 import PaymentCard from '@/components/Payment/PaymentCard.vue';
+import TransactionCardLoader from '@/components/Transaction/TransactionCardLoader.vue';
 import CustomTab from '@/components/CustomTab.vue';
 import SortBy from '@/components/SortBy.vue';
 
@@ -78,6 +84,7 @@ export default {
   name: 'Listings',
   components: {
     PaymentCard,
+    TransactionCardLoader,
     CustomTab,
     SortBy,
   },
@@ -101,7 +108,7 @@ export default {
       currentPage: 0,
     });
     const paginationTimeout = ref([]);
-    const dataList = ref([]);
+    const dataList = ref(null);
 
     onBeforeMount(() => {
       if (paginationTimeout.value.length > 0) {
@@ -144,21 +151,21 @@ export default {
         ...pagination.value,
         currentPage: page - 1,
       };
-      const transDataList = slicePage({
+      const paymentDataList = slicePage({
         ...newPagination,
       });
       dataList.value = [];
       paginationTimeout.value = setTimeout(() => {
-        dataList.value = transDataList.data;
+        dataList.value = paymentDataList.data;
       }, 1);
-      pagination.value = transDataList.pagination;
+      pagination.value = paymentDataList.pagination;
     };
     watch(listings, () => {
-      const transDataList = slicePage({
+      const paymentDataList = slicePage({
         ...pagination.value,
       });
-      dataList.value = transDataList.data;
-      pagination.value = transDataList.pagination;
+      dataList.value = paymentDataList.data;
+      pagination.value = paymentDataList.pagination;
     });
 
     return {
