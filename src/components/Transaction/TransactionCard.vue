@@ -93,11 +93,11 @@
       </el-col>
     </el-row>
   </div>
-  <el-row>
+  <!-- <el-row>
       <el-col :xs="24" :sm="24">
         {{transactionDetail}}
       </el-col>
-    </el-row>
+    </el-row> -->
 </template>
 
 <script>

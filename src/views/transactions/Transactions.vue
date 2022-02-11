@@ -34,7 +34,7 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col v-for="transaction in currentTransactionsList" :key="transaction.id" :xs="24" :sm="24">
+      <el-col v-for="transaction in dataList" :key="transaction.id" :xs="24" :sm="24">
         <div style="padding: 20px; border: 1px solid #C4C4C4; margin-bottom: 10px;">
           <TransactionCard :transactionDetail="transaction" />
         </div>
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, onBeforeMount, watch } from 'vue';
 import { CONFIGURATION_NAMES } from '@/common/constants';
 import TransactionCard from '@/components/Transaction/TransactionCard.vue';
 import transactionServices from '@/services/transaction-service';
@@ -75,15 +75,22 @@ export default {
   },
   setup() {
     const transactionsList = ref([]);
-    const currentTransactionsList = ref([]);
     const transactionsListLoading = ref(true);
     const activeTabName = ref('All');
     const sortTabName = ref('Sort By');
     const tabOptions = ref([]);
     const pagination = ref({
-      itemPerPage: 50,
+      itemPerPage: 8,
       totalRecord: 0,
       currentPage: 0,
+    });
+    const paginationTimeout = ref([]);
+    const dataList = ref([]);
+
+    onBeforeMount(() => {
+      if (paginationTimeout.value.length > 0) {
+        clearTimeout(paginationTimeout.value);
+      }
     });
 
     const getLicenses = async () => {
@@ -116,15 +123,9 @@ export default {
     };
 
     const getTransactions = async (sortBy) => {
+      console.log(sortBy);
       transactionsList.value = await transactionServices.getTransactions();
-      currentTransactionsList.value = transactionsList.value;
       transactionsListLoading.value = false;
-      const transacationList = getTransaction({
-        ...pagination.value,
-      });
-      currentTransactionsList.value = transacationList.data;
-      pagination.value = transacationList.pagination;
-      console.log(sortBy); // sort the data here
     };
 
     const getSortBy = (sortBy) => {
@@ -141,19 +142,21 @@ export default {
         ...pagination.value,
         currentPage: page - 1,
       };
-      const transactionLists = getTransaction({
+      const transDataList = getTransaction({
         ...newPagination,
       });
-      currentTransactionsList.value = transactionLists.data;
-      pagination.value = transactionLists.pagination;
+      dataList.value = [];
+      paginationTimeout.value = setTimeout(() => {
+        dataList.value = transDataList.data;
+      }, 1);
+      pagination.value = transDataList.pagination;
     };
-
-    watch(currentTransactionsList, (currentValue/* , oldValue */) => {
-      /* console.log('watch currentTransactionsList', currentTransactionsList.value); */
-      currentTransactionsList.value = currentValue;
-      /* console.log('watch currentTransactionsList', currentTransactionsList.value);
-      console.log('watch currentValue', currentValue);
-      console.log('watch oldValue', oldValue); */
+    watch(transactionsList, () => {
+      const transDataList = getTransaction({
+        ...pagination.value,
+      });
+      dataList.value = transDataList.data;
+      pagination.value = transDataList.pagination;
     });
 
     return {
@@ -162,20 +165,11 @@ export default {
       activeTabName,
       sortTabName,
       transactionsList,
-      currentTransactionsList,
+      dataList,
       transactionsListLoading,
       pagination,
       paginationCallback,
     };
   },
-  /* watch: {
-    transactionsList() {
-      const transacationList = this.getTransaction({
-        ...this.pagination,
-      });
-      this.transactionsList = transacationList.data;
-      this.pagination = transacationList.pagination;
-    },
-  }, */
 };
 </script>
