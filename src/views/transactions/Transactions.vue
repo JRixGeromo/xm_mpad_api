@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { CONFIGURATION_NAMES } from '@/common/constants';
 import TransactionCard from '@/components/Transaction/TransactionCard.vue';
 import transactionServices from '@/services/transaction-service';
@@ -85,7 +85,6 @@ export default {
       totalRecord: 0,
       currentPage: 0,
     });
-    const paginationTimeout = ref(null);
 
     const getLicenses = async () => {
       configurationServices.getConfigurationByName(CONFIGURATION_NAMES.productLicense).then((data) => {
@@ -138,22 +137,24 @@ export default {
     });
 
     const paginationCallback = (page) => {
-      console.log('paginationCallback');
-      console.log('page', page);
       const newPagination = {
         ...pagination.value,
         currentPage: page - 1,
       };
-      console.log('paginationCallback newPagination', newPagination);
       const transactionLists = getTransaction({
         ...newPagination,
       });
-      console.log('paginationCallback transactionsList', transactionLists);
-      paginationTimeout.value = setTimeout(() => {
-        currentTransactionsList.value = transactionLists.data;
-      }, 1);
+      currentTransactionsList.value = transactionLists.data;
       pagination.value = transactionLists.pagination;
     };
+
+    watch(currentTransactionsList, (currentValue/* , oldValue */) => {
+      /* console.log('watch currentTransactionsList', currentTransactionsList.value); */
+      currentTransactionsList.value = currentValue;
+      /* console.log('watch currentTransactionsList', currentTransactionsList.value);
+      console.log('watch currentValue', currentValue);
+      console.log('watch oldValue', oldValue); */
+    });
 
     return {
       getSortBy,
