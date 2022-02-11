@@ -33,6 +33,18 @@
         <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
+    <el-row class="py-10">
+      <el-col :span="24" class="d-flex-end">
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
+      </el-col>
+    </el-row>
     <el-row>
       <el-col v-for="transaction in dataList" :key="transaction.id" :xs="24" :sm="24">
         <div style="padding: 20px; border: 1px solid #C4C4C4; margin-bottom: 10px;">
