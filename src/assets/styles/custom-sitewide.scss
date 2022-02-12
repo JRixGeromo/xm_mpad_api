@@ -1499,3 +1499,7 @@ hr.solid {
     font-weight: bold !important;
   }
 }
+
+::placeholder {
+  color: #000 !important;
+}
