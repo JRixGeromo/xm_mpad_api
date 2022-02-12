@@ -25,7 +25,7 @@
         <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
-    <el-row style="text-align: cetner; margin-bottom: 2em;">
+    <el-row>
       <el-col :span="24" :xs="12">
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col>
@@ -95,7 +95,7 @@ export default {
   setup() {
     const transactionsList = ref([]);
     const transactionsListLoading = ref(true);
-    const activeTabName = ref('All');
+    const activeTabName = ref('all');
     const sortTabName = ref('Sort By');
     const tabOptions = ref([]);
     const pagination = ref({
@@ -121,6 +121,10 @@ export default {
             tabLabel: el.name,
           };
           return res;
+        });
+        tabOptions.value.unshift({
+          tabName: 'all',
+          tabLabel: 'All',
         });
       });
     };

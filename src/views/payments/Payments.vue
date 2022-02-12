@@ -20,7 +20,7 @@
         <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
-    <el-row style="text-align: cetner; margin-bottom: 2em;">
+    <el-row>
       <el-col :span="24" :xs="12">
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col>
