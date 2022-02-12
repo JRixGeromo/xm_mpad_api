@@ -184,6 +184,13 @@
   // filter: brightness(1) invert(0);
 }
 
+
+.xm-el-icon-plus {
+  width    : 12px;
+  content  : url('assets/icons/Plus.svg');
+  // filter: brightness(1) invert(0);
+}
+
 /* Form */
 .image-files {
   width           : 100px;
@@ -1349,6 +1356,10 @@ hr.solid {
   }
 }
 
+.py-4 {
+  padding: 4px 0;
+}
+
 .py-10 {
   padding: 10px 0;
 }
@@ -1378,6 +1389,15 @@ hr.solid {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+
+  @media only screen and (max-width: 768px) {
+    justify-content: center !important;
+  }
+}
+
+.d-flex-start {
+  display: flex;
+  align-items: center;
 
   @media only screen and (max-width: 768px) {
     justify-content: center !important;
@@ -1478,4 +1498,8 @@ hr.solid {
     color: #000 !important;
     font-weight: bold !important;
   }
+}
+
+::placeholder {
+  color: #000 !important;
 }

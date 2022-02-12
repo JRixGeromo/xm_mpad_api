@@ -117,10 +117,14 @@ export default {
     const transactionSeller = ref([]);
     const transactionBuyer = ref([]);
 
-    onMounted(async () => {
+    const getTransactions = async () => {
       transactionProduct.value = await productServices.getProductById(props.transactionDetail.productId);
       transactionSeller.value = await profileServices.getProfilebyUserId(props.transactionDetail.sellerUserId);
       transactionBuyer.value = await profileServices.getProfilebyUserId(props.transactionDetail.buyerUserId);
+    };
+
+    onMounted(async () => {
+      getTransactions();
     });
 
     return {
@@ -129,6 +133,11 @@ export default {
       transactionBuyer,
       dayjs,
     };
+  },
+  watch: {
+    transactionDetail() {
+      this.getTransactions();
+    },
   },
 };
 </script>

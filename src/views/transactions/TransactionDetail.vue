@@ -59,7 +59,7 @@
     </div>
     <div>
       <el-row style="justify-content: center;">
-          <el-col :span="14" :xs="24">
+          <el-col :span="12" :xs="24">
               <div style="
                 justify-content: center;
                 text-align: center;
@@ -75,27 +75,53 @@
           </el-col>
       </el-row>
     </div>
-    <div>
+    <div style="margin-bottom:50px;">
       <el-row style="justify-content: center;">
           <el-col :span="14" :xs="24">
-              <div style="height:300px; margin:40px 0; white-space: pre;">
+              <div style="height:300px; margin:40px 0;">
                 <ul class="events">
                   <li>
                     <time datetime="10:03"></time>
-                    <span>Here 1</span>
+                    <span>
+                      <div
+                        style="color:#000;line-height:24px;font-weight:400; margin-top:-5px;"
+                        class="font-p">
+                        02/01/2021 16:45 <br/>
+                        Transaction number: a1234t235g32f9v4cv <br/>
+                        desmondzth made a payment of SGD$700.00 via Credit Card <br/>
+                      <router-link to="/transactions">
+                        <div
+                          style="color:rgb(7, 115, 255)"><u>View payment details</u></div>
+                      </router-link>
+                      </div>
+                    </span>
                   </li>
                   <li>
                     <time datetime="10:03"></time>
-                    <span>Here 2</span>
+                    <span>
+                      <div
+                        style="color:#000;line-height:24px;font-weight:400; margin-top:-5px;"
+                        class="font-p">
+                        02/01/2021 16:19 <br/>
+                        Transaction number: a1234t235g32f9v4cv <br/>
+                        sellerusername accepted offer of SGD$700.00
+                      </div>
+                    </span>
                   </li>
                   <li>
                     <time datetime="10:03"></time>
-                    <span>Here 3</span>
+                    <div
+                      style="color:#000;line-height:24px;font-weight:400; margin-left:20px; margin-top:-5px;"
+                      class="font-p">
+                      01/01/2021 13:45 <br/>
+                      Transaction number: a1234t235g32f9v4cv <br/>
+                      desmondzth made an offer of SGD$700.00
+                    </div>
                   </li>
-                  <li>
+                  <!-- <li>
                     <time datetime="10:03"></time>
                     <span>Here 4</span>
-                  </li>
+                  </li> -->
                 </ul>
 
                 <!-- <el-steps direction="vertical">
@@ -172,7 +198,7 @@ export default {
 
   .events time {
     position: relative;
-    padding: 0 1.5em;  }
+    padding: 0;  }
 
   .events time::after {
     content: "";
@@ -207,7 +233,7 @@ export default {
     font-weight: bolder;
   }
 
-  .events { margin: 1em; width: 50%; }
+  /* .events { margin: 1em; width: 50%; } */
   .events,
   .events *::before,
   .events *::after { box-sizing: border-box; font-family: arial; }

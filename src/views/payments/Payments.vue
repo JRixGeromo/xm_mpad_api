@@ -17,32 +17,39 @@
         <h2 class="main-title">Payments</h2>
       </el-col>
       <el-col :span="4" :offset="8" class="d-flex-end">
-        <div class="custom-select">
-          <el-select v-model="sortTabName" placeholder="Sort By">
-            <el-option value="newest" label="Newest"></el-option>
-            <el-option value="oldest" label="Oldest"></el-option>
-          </el-select>
-        </div>
+        <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
-    <el-row style="text-align: cetner; margin-bottom: 2em;">
+    <el-row>
       <el-col :span="24" :xs="12">
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col>
       <el-col :span="12" class="d-flex-end hidden-sm-and-up">
-        <div class="custom-select">
-          <el-select v-model="sortTabName" placeholder="Sort By">
-            <el-option value="newest" label="Newest"></el-option>
-            <el-option value="oldest" label="Oldest"></el-option>
-          </el-select>
-        </div>
+        <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
-    <el-row>
-      <el-col v-for="product in listings" :key="product.id" :xs="24" :sm="24">
+    <el-row class="py-10">
+      <el-col :span="24" class="d-flex-end">
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
+      </el-col>
+    </el-row>
+    <el-row v-if="dataList">
+      <el-col v-for="product in dataList" :key="product.id" :xs="24" :sm="24">
         <div style="padding: 20px; border: 1px solid #C4C4C4; margin-bottom: 10px;">
           <PaymentCard :productDetail="product" />
         </div>
+      </el-col>
+    </el-row>
+    <el-row v-else>
+      <el-col v-for="index in 4" :key="index" :span="24" class="px-10">
+        <TransactionCardLoader />
       </el-col>
     </el-row>
     <el-row v-if="activeTabName == 'completed' " style="padding: 40px 0;">
@@ -52,7 +59,14 @@
     </el-row>
     <el-row class="py-10">
       <el-col :span="24" class="d-flex-end">
-        <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
       </el-col>
     </el-row>
   </div>
@@ -60,15 +74,19 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeMount, watch } from 'vue';
 import PaymentCard from '@/components/Payment/PaymentCard.vue';
+import TransactionCardLoader from '@/components/Transaction/TransactionCardLoader.vue';
 import CustomTab from '@/components/CustomTab.vue';
+import SortBy from '@/components/SortBy.vue';
 
 export default {
   name: 'Listings',
   components: {
     PaymentCard,
+    TransactionCardLoader,
     CustomTab,
+    SortBy,
   },
   setup() {
     const listings = ref([]);
@@ -84,10 +102,70 @@ export default {
         tabLabel: 'Completed',
       },
     ]);
+    const pagination = ref({
+      itemPerPage: 8,
+      totalRecord: 0,
+      currentPage: 0,
+    });
+    const paginationTimeout = ref([]);
+    const dataList = ref(null);
 
-    onMounted(async () => {
+    onBeforeMount(() => {
+      if (paginationTimeout.value.length > 0) {
+        clearTimeout(paginationTimeout.value);
+      }
+    });
+
+    const getProducts = async (sortBy) => {
       const listingRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
       listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      console.log(sortBy);
+    };
+
+    const slicePage = (params) => {
+      const paginationDetails = {
+        itemPerPage: params.itemPerPage,
+        totalRecord: listings.value.length,
+        currentPage: params.currentPage,
+      };
+      const data = {
+        pagination: paginationDetails,
+        data: listings.value.slice(
+          (params.itemPerPage * params.currentPage),
+          (params.itemPerPage * (params.currentPage + 1)),
+        ),
+      };
+      return data;
+    };
+
+    onMounted(async () => {
+      getProducts('Newest');
+    });
+
+    const getSortBy = (sortBy) => {
+      getProducts(sortBy);
+    };
+
+    const paginationCallback = (page) => {
+      const newPagination = {
+        ...pagination.value,
+        currentPage: page - 1,
+      };
+      const paymentDataList = slicePage({
+        ...newPagination,
+      });
+      dataList.value = [];
+      paginationTimeout.value = setTimeout(() => {
+        dataList.value = paymentDataList.data;
+      }, 1);
+      pagination.value = paymentDataList.pagination;
+    };
+    watch(listings, () => {
+      const paymentDataList = slicePage({
+        ...pagination.value,
+      });
+      dataList.value = paymentDataList.data;
+      pagination.value = paymentDataList.pagination;
     });
 
     return {
@@ -95,6 +173,10 @@ export default {
       activeTabName,
       tabOptions,
       sortTabName,
+      getSortBy,
+      dataList,
+      pagination,
+      paginationCallback,
     };
   },
 };

@@ -17,16 +17,23 @@
         <h2 class="main-title">Users</h2>
       </el-col>
       <el-col :span="4" :offset="8" class="d-flex-end">
-        <div class="custom-select">
-          <el-select v-model="sortTabName" placeholder="Sort By">
-            <el-option value="newest" label="Newest"></el-option>
-            <el-option value="oldest" label="Oldest"></el-option>
-          </el-select>
-        </div>
+        <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
-    <el-row style="margin: 40px 0;">
-      <el-col v-for="profile in profiles" :key="profile.profileId" :xs="24" :sm="6">
+    <el-row class="py-10">
+      <el-col :span="24" class="d-flex-end">
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
+      </el-col>
+    </el-row>
+    <el-row v-if="dataList" style="margin: 40px 0;">
+      <el-col v-for="profile in dataList" :key="profile.profileId" :xs="24" :sm="6">
         <router-link :to="{ path: '/user/'+ profile.profileId}">
           <div class="profile-container">
             <div>
@@ -53,9 +60,21 @@
         </router-link>
       </el-col>
     </el-row>
+    <el-row v-else style="margin: 40px 0;">
+      <el-col v-for="index in 4" :key="index" :xs="24" :sm="6">
+        <UserLoader />
+      </el-col>
+    </el-row>
     <el-row class="py-10">
       <el-col :span="24" class="d-flex-end">
-        <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+        <el-pagination
+          class="table-pagination"
+          layout="prev, pager, next"
+          :total="pagination.totalRecord"
+          :page-size="pagination.itemPerPage"
+          @current-change="paginationCallback"
+          :current-page="pagination.currentPage + 1"
+        ></el-pagination>
       </el-col>
     </el-row>
   </div>
@@ -63,16 +82,36 @@
 
 <script>
 import { MpApiIni } from '@/services/api';
-import { ref, onMounted } from 'vue';
+import SortBy from '@/components/SortBy.vue';
+import UserLoader from '@/components/User/UserLoader.vue';
+import { ref, onMounted, onBeforeMount, watch } from 'vue';
 
 export default {
   name: 'Users',
+  components: {
+    SortBy,
+    UserLoader,
+  },
   setup() {
     const profiles = ref([]);
     const defaultProfileImg = ref(process.env.VUE_APP_DEFAULT_PIC_URL);
     const sortTabName = ref('Sort By');
+    const pagination = ref({
+      itemPerPage: 8,
+      totalRecord: 0,
+      currentPage: 0,
+    });
+    const paginationTimeout = ref([]);
+    const dataList = ref(null);
 
-    const retreiveProfiles = () => {
+    onBeforeMount(() => {
+      if (paginationTimeout.value.length > 0) {
+        clearTimeout(paginationTimeout.value);
+      }
+    });
+
+    const retreiveProfiles = (sortBy) => {
+      console.log(sortBy);
       MpApiIni()
         .get('/api/mp/profile/v1/profiles')
         .then((res) => {
@@ -80,14 +119,60 @@ export default {
         });
     };
 
+    const slicePage = (params) => {
+      const paginationDetails = {
+        itemPerPage: params.itemPerPage,
+        totalRecord: profiles.value.length,
+        currentPage: params.currentPage,
+      };
+      const data = {
+        pagination: paginationDetails,
+        data: profiles.value.slice(
+          (params.itemPerPage * params.currentPage),
+          (params.itemPerPage * (params.currentPage + 1)),
+        ),
+      };
+      return data;
+    };
+
+    const getSortBy = (sortBy) => {
+      retreiveProfiles(sortBy);
+    };
+
     onMounted(() => {
-      retreiveProfiles();
+      retreiveProfiles('Newest');
+    });
+
+    const paginationCallback = (page) => {
+      const newPagination = {
+        ...pagination.value,
+        currentPage: page - 1,
+      };
+      const usersDataList = slicePage({
+        ...newPagination,
+      });
+      dataList.value = [];
+      paginationTimeout.value = setTimeout(() => {
+        dataList.value = usersDataList.data;
+      }, 1);
+      pagination.value = usersDataList.pagination;
+    };
+    watch(profiles, () => {
+      const usersDataList = slicePage({
+        ...pagination.value,
+      });
+      dataList.value = usersDataList.data;
+      pagination.value = usersDataList.pagination;
     });
 
     return {
       profiles,
       defaultProfileImg,
       sortTabName,
+      getSortBy,
+      dataList,
+      pagination,
+      paginationCallback,
     };
   },
 };
