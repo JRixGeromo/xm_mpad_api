@@ -50,6 +50,6 @@ export default {
 </script>
 <style>
   .custom-tab .tab-item {
-    width: 106px;
+    width: 105px;
   }
 </style>

@@ -116,6 +116,11 @@ export default {
         .get('/api/mp/profile/v1/profiles')
         .then((res) => {
           profiles.value = res.data;
+          if (sortBy === 'Newest') {
+            profiles.value = profiles.value.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+          } else {
+            profiles.value = profiles.value.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
+          }
         });
     };
 

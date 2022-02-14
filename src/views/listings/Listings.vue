@@ -88,7 +88,6 @@ export default {
   setup() {
     const listings = ref([]);
     const activeTabName = ref('all');
-    const sortTabName = ref('Sort By');
     const tabOptions = ref([]);
     const pagination = ref({
       itemPerPage: 9,
@@ -140,7 +139,12 @@ export default {
     const getProducts = async (sortBy) => {
       const listingRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
       console.log(sortBy); // sort the data here
-      listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      if (sortBy === 'Newest') {
+        listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      } else {
+        listings.value = listingRes.data.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
+      }
+      console.log('listings', listings.value);
     };
 
     onMounted(async () => {
@@ -149,6 +153,7 @@ export default {
     });
 
     const getSortBy = (sortBy) => {
+      console.log('getSortBy', sortBy);
       getProducts(sortBy);
     };
 
@@ -178,7 +183,6 @@ export default {
       listings,
       activeTabName,
       tabOptions,
-      sortTabName,
       getProducts,
       getSortBy,
       dataList,

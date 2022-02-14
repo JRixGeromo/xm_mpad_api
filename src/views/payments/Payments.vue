@@ -118,8 +118,12 @@ export default {
 
     const getProducts = async (sortBy) => {
       const listingRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
-      listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
       console.log(sortBy);
+      if (sortBy === 'Newest') {
+        listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      } else {
+        listings.value = listingRes.data.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
+      }
     };
 
     const slicePage = (params) => {
