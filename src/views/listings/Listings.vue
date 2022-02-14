@@ -114,6 +114,10 @@ export default {
           };
           return res;
         });
+        tabOptions.value.unshift({
+          tabName: 'all',
+          tabLabel: 'All',
+        });
       });
     };
 
