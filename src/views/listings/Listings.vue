@@ -87,6 +87,7 @@ export default {
   },
   setup() {
     const listings = ref([]);
+    const listingRes = ref([]);
     const activeTabName = ref('all');
     const tabOptions = ref([]);
     const pagination = ref({
@@ -136,26 +137,24 @@ export default {
       return data;
     };
 
-    const getProducts = async (sortBy) => {
-      const listingRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
-      console.log(sortBy); // sort the data here
+    const getSortBy = (sortBy) => {
       if (sortBy === 'Newest') {
-        listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+        listings.value = listingRes.value.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
       } else {
-        listings.value = listingRes.data.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
+        listings.value = listingRes.value.data.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
       }
-      console.log('listings', listings.value);
+      dataList.value = listings.value;
+    };
+
+    const getProducts = async () => {
+      listingRes.value = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
+      getSortBy('Newest');
     };
 
     onMounted(async () => {
-      getProducts('Newest');
+      getProducts();
       getLicenses();
     });
-
-    const getSortBy = (sortBy) => {
-      console.log('getSortBy', sortBy);
-      getProducts(sortBy);
-    };
 
     const paginationCallback = (page) => {
       const newPagination = {
@@ -181,6 +180,7 @@ export default {
 
     return {
       listings,
+      listingRes,
       activeTabName,
       tabOptions,
       getProducts,

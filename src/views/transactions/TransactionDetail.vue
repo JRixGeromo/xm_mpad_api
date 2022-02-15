@@ -77,7 +77,7 @@
     </div>
     <div style="margin-bottom:50px;">
       <el-row style="justify-content: center;">
-          <el-col :span="14" :xs="24">
+          <el-col :span="12" :xs="24">
               <div style="height:300px; margin:40px 0;">
                 <ul class="events">
                   <li>
@@ -123,29 +123,6 @@
                     <span>Here 4</span>
                   </li> -->
                 </ul>
-
-                <!-- <el-steps direction="vertical">
-                  <el-step description=" 02/01/2021 16:45
-                      Transaction hash: a1234t235g32f9v4cv
-                      desmondzth made a payment of SGD$700.00 via Credit Card
-                      View payment details
-                    ">
-                  </el-step>
-                  <el-step description=" 02/01/2021 16:19
-                      Transaction hash: a1234t235g32f9v4cv
-                      sellerusername accepted offer of SGD$700.00
-                    ">
-                  </el-step>
-                  <el-step description=" 01/01/2021 13:45
-                      Transaction hash: a1234t235g32f9v4cv
-                      desmondzth made an offer of SGD$700.00
-                    ">
-                  </el-step>
-                  <el-step description="01/01/2021 13:45
-                      Transaction hash: a1234t235g32f9v4cv
-                      desmondzth made an offer of SGD$700.00">
-                  </el-step>
-                </el-steps> -->
               </div>
           </el-col>
       </el-row>
