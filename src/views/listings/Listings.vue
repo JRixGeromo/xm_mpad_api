@@ -41,7 +41,7 @@
       </el-col>
     </el-row>
     <el-row v-if="dataList">
-      <el-col v-for="product in dataList" :key="product.id" :xs="24" :sm="8" class="px-10">
+      <el-col v-for="product in dataList" :key="product.productId" :xs="24" :sm="8" class="px-10">
         <router-link :to="{ path: '/product/'+ product.productId}">
           <ProductCard :productDetail="product" />
         </router-link>
