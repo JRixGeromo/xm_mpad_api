@@ -94,6 +94,7 @@ export default {
   },
   setup() {
     const profiles = ref([]);
+    const listingRes = ref([]);
     const defaultProfileImg = ref(process.env.VUE_APP_DEFAULT_PIC_URL);
     const sortTabName = ref('Sort By');
     const pagination = ref({
@@ -110,17 +111,21 @@ export default {
       }
     });
 
-    const retreiveProfiles = (sortBy) => {
-      console.log(sortBy);
+    const getSortBy = (sortBy) => {
+      if (sortBy === 'Newest') {
+        listingRes.value = listingRes.value.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      } else {
+        listingRes.value = listingRes.value.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
+      }
+      dataList.value = listingRes.value;
+    };
+
+    const retreiveProfiles = () => {
       MpApiIni()
         .get('/api/mp/profile/v1/profiles')
         .then((res) => {
           profiles.value = res.data;
-          if (sortBy === 'Newest') {
-            profiles.value = profiles.value.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-          } else {
-            profiles.value = profiles.value.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
-          }
+          listingRes.value = profiles.value.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
         });
     };
 
@@ -140,12 +145,8 @@ export default {
       return data;
     };
 
-    const getSortBy = (sortBy) => {
-      retreiveProfiles(sortBy);
-    };
-
     onMounted(() => {
-      retreiveProfiles('Newest');
+      retreiveProfiles();
     });
 
     const paginationCallback = (page) => {

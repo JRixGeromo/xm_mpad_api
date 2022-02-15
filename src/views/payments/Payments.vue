@@ -90,6 +90,7 @@ export default {
   },
   setup() {
     const listings = ref([]);
+    const listingRes = ref([]);
     const activeTabName = ref('pending');
     const sortTabName = ref('Sort By');
     const tabOptions = ref([
@@ -116,14 +117,18 @@ export default {
       }
     });
 
-    const getProducts = async (sortBy) => {
-      const listingRes = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
-      console.log(sortBy);
+    const getSortBy = (sortBy) => {
       if (sortBy === 'Newest') {
-        listings.value = listingRes.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+        listings.value = listingRes.value.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
       } else {
-        listings.value = listingRes.data.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
+        listings.value = listingRes.value.data.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
       }
+      dataList.value = listings.value;
+    };
+
+    const getProducts = async () => {
+      listingRes.value = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
+      getSortBy('Newest');
     };
 
     const slicePage = (params) => {
@@ -143,12 +148,8 @@ export default {
     };
 
     onMounted(async () => {
-      getProducts('Newest');
+      getProducts();
     });
-
-    const getSortBy = (sortBy) => {
-      getProducts(sortBy);
-    };
 
     const paginationCallback = (page) => {
       const newPagination = {

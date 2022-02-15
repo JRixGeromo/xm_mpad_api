@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onBeforeMount, watch } from 'vue';
+import { ref, onMounted, onBeforeMount } from 'vue';
 import { CONFIGURATION_NAMES } from '@/common/constants';
 import TransactionCard from '@/components/Transaction/TransactionCard.vue';
 import TransactionCardLoader from '@/components/Transaction/TransactionCardLoader.vue';
@@ -82,6 +82,8 @@ import CustomTab from '@/components/CustomTab.vue';
 import SortBy from '@/components/SortBy.vue';
 import Filter from '@/components/Filter.vue';
 import configurationServices from '@/services/configuration-service';
+import productServices from '@/services/product-service';
+import profileServices from '@/services/profile-service';
 
 export default {
   name: 'Transactions',
@@ -104,7 +106,7 @@ export default {
       currentPage: 0,
     });
     const paginationTimeout = ref([]);
-    const dataList = ref(null);
+    const dataList = ref([]);
 
     onBeforeMount(() => {
       if (paginationTimeout.value.length > 0) {
@@ -145,10 +147,28 @@ export default {
       return data;
     };
 
+    const transactionProduct = ref([]);
+    const transactionSeller = ref([]);
+    const transactionBuyer = ref([]);
+
+    const getTransactionsList = (transactionDetail) => {
+      transactionDetail.forEach(async (element) => {
+        transactionProduct.value = await productServices.getProductById(element.productId);
+        transactionSeller.value = await profileServices.getProfilebyUserId(element.sellerUserId);
+        transactionBuyer.value = await profileServices.getProfilebyUserId(element.buyerUserId);
+        const transactionsListHold = [transactionBuyer.value, transactionSeller.value, transactionProduct.value];
+        dataList.value.push(transactionsListHold);
+      });
+      console.log('transactionsListRes', dataList.value);
+    };
+
     const getTransactions = async (sortBy) => {
       console.log(sortBy);
       transactionsList.value = await transactionServices.getTransactions();
       transactionsListLoading.value = false;
+      if (transactionsList.value) {
+        getTransactionsList(transactionsList.value);
+      }
     };
 
     const getSortBy = (sortBy) => {
@@ -174,13 +194,13 @@ export default {
       }, 1);
       pagination.value = transDataList.pagination;
     };
-    watch(transactionsList, () => {
+    /* watch(transactionsList, () => {
       const transDataList = slicePage({
         ...pagination.value,
       });
       dataList.value = transDataList.data;
       pagination.value = transDataList.pagination;
-    });
+    }); */
 
     return {
       getSortBy,
