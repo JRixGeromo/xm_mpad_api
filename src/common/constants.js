@@ -64,12 +64,12 @@ const NAV_MENU = [
     icon: 'xm-el-icon-s-cart',
     child: false,
   },
-  {
+  /* {
     name: 'Payments',
     route: '/payments',
     icon: 'xm-el-icon-s-payment',
     child: false,
-  },
+  }, */
   {
     name: 'Users',
     route: '/users',

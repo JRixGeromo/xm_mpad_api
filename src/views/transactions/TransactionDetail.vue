@@ -89,10 +89,10 @@
                         02/01/2021 16:45 <br/>
                         Transaction number: a1234t235g32f9v4cv <br/>
                         desmondzth made a payment of SGD$700.00 via Credit Card <br/>
-                      <router-link to="/transactions">
                         <div
-                          style="color:rgb(7, 115, 255)"><u>View payment details</u></div>
-                      </router-link>
+                          @click="dialogVisiblePaymentDetails = true;"
+                          style="color:rgb(7, 115, 255); cursor:pointer;"><u>View payment details</u>
+                        </div>
                       </div>
                     </span>
                   </li>
@@ -128,6 +128,114 @@
       </el-row>
     </div>
   </div>
+  <div id="dialogPayment">
+    <el-dialog
+      v-model="dialogVisiblePaymentDetails"
+      title="Payment Details"
+      :width="isMobileView ? '100%' : '50%'"
+    >
+      <div>
+        <el-row>
+          <el-col :span="9" :offset="2">
+            <span>Transaction ID:</span>
+          </el-col>
+          <el-col :span="11" :offset="2">
+            <span>123456</span>
+          </el-col>
+          <el-col :span="9" :offset="2">
+            <span>Date and Time:</span>
+          </el-col>
+          <el-col :span="11" :offset="2">
+            <span>02/01/2021 13:55</span>
+          </el-col>
+          <el-col :span="9" :offset="2">
+            <span>Amount:</span>
+          </el-col>
+          <el-col :span="11" :offset="2">
+            <span>SGD$4000.00</span>
+          </el-col>
+          <el-col :span="9" :offset="2">
+            <span>XM Comission:</span>
+          </el-col>
+          <el-col :span="11" :offset="2">
+            <span>5%</span>
+          </el-col>
+          <el-col :span="9" :offset="2">
+            <span>Seller Receives:</span>
+          </el-col>
+          <el-col :span="11" :offset="2">
+            <span>SGD$3800.00</span>
+          </el-col>
+        </el-row>
+      </div>
+      <div>
+        <el-row>
+          <el-col :span="9" :offset="2">
+            <span>Payment Type:</span>
+          </el-col>
+          <el-col :span="11" :offset="2">
+            <span>Credit Card</span>
+          </el-col>
+          <el-col :span="9" :offset="2">
+            <span>Credit Card Type:</span>
+          </el-col>
+          <el-col :span="11" :offset="2">
+            <span>Visa</span>
+          </el-col>
+          <el-col :span="9" :offset="2">
+            <span>Account Number:</span>
+          </el-col>
+          <el-col :span="11" :offset="2">
+            <span>***********1234</span>
+          </el-col>
+        </el-row>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            class="font-bold reject-btn custom-btn"
+            @click="dialogVisiblePaymentDetails = false;
+          ">REJECT
+          </el-button>
+          <el-button
+            class="font-bold approve-btn custom-btn"
+            @click="
+              dialogVisiblePaymentDetails = false;
+              dialogVisiblePaymentApproved = true;
+          ">APPROVE</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
+  <!-- eslint-disable max-len -->
+    <el-dialog
+      v-model="dialogVisiblePaymentApproved"
+      title="Approve?"
+      :width="isMobileView ? '100%' : '60%'"
+    >
+    <div style="margin-bottom: 20px; color: #000;">
+      <span>Upon confirming, buyer 'desmondtzh' 's payment of SGD$3800.00 (after 5% comission fee) will be released to seller <span style="text-decoration: underline;">'sellerusername'</span>.</span>
+    </div>
+      <el-input
+        v-model="textarea1"
+        type="textarea"
+        :autosize="{ minRows: 4, maxRows: 6 }"
+        placeholder="Remarks to buyer and seller (optional)"
+      />
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button
+          class="font-bold reject-btn custom-btn"
+          @click="dialogVisiblePaymentApproved = false;
+          ">CANCEL</el-button>
+        <el-button
+          class="font-bold approve-btn custom-btn"
+          @click="
+            dialogVisiblePaymentApproved = false;
+        ">CONFIRM</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -145,6 +253,8 @@ export default {
     const transactionSeller = ref([]);
     const transactionBuyer = ref([]);
     const transactionDetail = ref([]);
+    const dialogVisiblePaymentDetails = ref(false);
+    const dialogVisiblePaymentApproved = ref(false);
 
     onMounted(async () => {
       transactionDetail.value = await transactionServices.getTransactionById(route.params.id);
@@ -162,6 +272,8 @@ export default {
       isMobileView,
       transactionSeller,
       transactionBuyer,
+      dialogVisiblePaymentDetails,
+      dialogVisiblePaymentApproved,
     };
   },
 };

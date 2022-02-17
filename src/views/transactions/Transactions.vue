@@ -25,11 +25,14 @@
         <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="24" :xs="12">
+    <el-row class="hidden-sm-and-up">
+      <!-- <el-col :span="24" :xs="12">
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
+      </el-col> -->
+      <el-col :span="24" :xs="12">
+        <Filter/>
       </el-col>
-      <el-col :span="12" class="d-flex-end hidden-sm-and-up">
+      <el-col :span="12" class="d-flex-end">
         <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
@@ -78,7 +81,7 @@ import { CONFIGURATION_NAMES } from '@/common/constants';
 import TransactionCard from '@/components/Transaction/TransactionCard.vue';
 import TransactionCardLoader from '@/components/Transaction/TransactionCardLoader.vue';
 import transactionServices from '@/services/transaction-service';
-import CustomTab from '@/components/CustomTab.vue';
+/* import CustomTab from '@/components/CustomTab.vue'; */
 import SortBy from '@/components/SortBy.vue';
 import Filter from '@/components/Filter.vue';
 import configurationServices from '@/services/configuration-service';
@@ -88,7 +91,7 @@ export default {
   components: {
     TransactionCard,
     TransactionCardLoader,
-    CustomTab,
+    /* CustomTab, */
     Filter,
     SortBy,
   },

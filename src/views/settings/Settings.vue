@@ -57,12 +57,12 @@
                     <el-checkbox label="Trust Wallet" name="type"></el-checkbox>
                   </el-col>
                   <el-col :span="12" :offset="1" :xs="{offset:0,span:24}">
-                    <el-checkbox label="Enjin" name="type"></el-checkbox>
+                    <el-checkbox label="Coinbase" name="type"></el-checkbox>
                     <br/>
                     <el-checkbox v-model="input" label="Metamask" name="type"></el-checkbox>
                     <br/>
                     <div style="width: 400px;">
-                      <el-checkbox label="Others" name="type"></el-checkbox>
+                      <el-checkbox label="Other:" name="type"></el-checkbox>
                       <input type="text" style="height: 5px; margin-left: 10px;">
                     </div>
                   </el-col>

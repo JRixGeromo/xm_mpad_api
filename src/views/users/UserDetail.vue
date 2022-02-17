@@ -40,9 +40,9 @@
           </div>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row style="margin: 20px 0">
         <el-col>
-          <div style="padding: 20px; border: thin solid #d0d0d0; border-radius: 14px; margin-top: 20px">
+          <div style="padding: 20px; border: thin solid #d0d0d0; border-radius: 14px;">
             <el-collapse v-model="activeName" accordion>
               <el-collapse-item title="Listings" name="1">
                 <div v-if="profileListing.length > 0">

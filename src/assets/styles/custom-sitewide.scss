@@ -1489,6 +1489,32 @@ hr.solid {
   }
 }
 
+#dialogPayment {
+  .el-dialog__header {
+    padding: 20px 0;
+    background-color:#143649;
+    span {
+      color: #fff;
+      text-transform: uppercase;
+      font-family: $font-family-montserrat;
+    }
+    .el-dialog__headerbtn .el-dialog__close {
+      color: #fff;
+    }
+  }
+  .el-dialog__body {
+    color: #000;
+    font-size: 16px;
+    @media only screen and (max-width: 768px) {
+      font-size: 14px;
+    }
+  }
+  .dialog-footer {
+    display: flex;
+    justify-content: space-evenly;
+  }
+}
+
 /* Select Styles */ 
 .custom-select {
   .el-input__inner {
