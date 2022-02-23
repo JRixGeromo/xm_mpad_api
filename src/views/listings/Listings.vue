@@ -22,7 +22,7 @@
     </el-row>
     <el-row style="text-align: center; margin: 20px 0 40px 0; padding: 0 10px;">
       <el-col :span="24" :xs="12">
-        <CustomTab v-model="activeTabName" :tabs="tabOptions" />
+        <CustomTab v-model="activeTabName" :tabs="tabOptions" :getTabLicense="getTabLicense" />
       </el-col>
       <el-col :span="12" class="d-flex-end hidden-sm-and-up">
         <SortBy :getSortBy="getSortBy" />
@@ -137,6 +137,55 @@ export default {
       return data;
     };
 
+    const paginationCallback = (page) => {
+      const newPagination = {
+        ...pagination.value,
+        currentPage: page - 1,
+      };
+      const prodDataList = slicePage({
+        ...newPagination,
+      });
+      dataList.value = [];
+      paginationTimeout.value = setTimeout(() => {
+        /* dataList.value = prodDataList.data; */
+        if (activeTabName.value !== 'all') {
+          dataList.value = prodDataList.data.filter((x) => x.license.toLowerCase().includes(activeTabName.value));
+        } else {
+          dataList.value = prodDataList.data;
+        }
+      }, 1);
+      pagination.value = prodDataList.pagination;
+    };
+
+    const getTabLicense = (tab) => {
+      if (tab === 'dc') {
+        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
+        dataList.value = listings.value;
+      } else if (tab === 'disney') {
+        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
+        dataList.value = listings.value;
+      } else if (tab === 'marvel') {
+        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
+        dataList.value = listings.value;
+      } else if (tab === 'warner bros') {
+        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
+        dataList.value = listings.value;
+      } else if (tab === 'star wars') {
+        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
+        dataList.value = listings.value;
+      } else if (tab === 'hasbro') {
+        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
+        dataList.value = listings.value;
+      } else if (tab === 'other') {
+        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
+        dataList.value = listings.value;
+      } else {
+        listings.value = listingRes.value.data;
+        dataList.value = listings.value;
+      }
+      paginationCallback(1);
+    };
+
     const getSortBy = (sortBy) => {
       if (sortBy === 'Newest') {
         listings.value = listingRes.value.data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
@@ -144,6 +193,7 @@ export default {
         listings.value = listingRes.value.data.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
       }
       dataList.value = listings.value;
+      getTabLicense(activeTabName.value);
     };
 
     const getProducts = async () => {
@@ -156,20 +206,6 @@ export default {
       getLicenses();
     });
 
-    const paginationCallback = (page) => {
-      const newPagination = {
-        ...pagination.value,
-        currentPage: page - 1,
-      };
-      const prodDataList = slicePage({
-        ...newPagination,
-      });
-      dataList.value = [];
-      paginationTimeout.value = setTimeout(() => {
-        dataList.value = prodDataList.data;
-      }, 1);
-      pagination.value = prodDataList.pagination;
-    };
     watch(listings, () => {
       const prodDataList = slicePage({
         ...pagination.value,
@@ -188,6 +224,7 @@ export default {
       dataList,
       pagination,
       paginationCallback,
+      getTabLicense,
     };
   },
 };

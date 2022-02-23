@@ -5,26 +5,13 @@
           <el-col :span="24">
           <p style="font-weight: bold; margin-bottom: 0px; margin-top: 0px" class="fs-16">Licensors</p>
           </el-col>
-          <el-col :span="12" :xs="24" class="py-4">
-          <el-checkbox v-model="checked1" label="DC" size="large"></el-checkbox>
-          </el-col>
-          <el-col :span="12" :xs="24" class="py-4">
-          <el-checkbox v-model="checked1" label="Disney" size="large"></el-checkbox>
-          </el-col>
-          <el-col :span="12" :xs="24" class="py-4">
-          <el-checkbox v-model="checked1" label="Hasbro" size="large"></el-checkbox>
-          </el-col>
-          <el-col :span="12" :xs="24" class="py-4">
-          <el-checkbox v-model="checked1" label="Marvel" size="large"></el-checkbox>
-          </el-col>
-          <el-col :span="12" :xs="24" class="py-4">
-          <el-checkbox v-model="checked1" label="Star Wars" size="large"></el-checkbox>
-          </el-col>
-          <el-col :span="12" :xs="24" class="py-4">
-          <el-checkbox v-model="checked1" label="Warner Bros" size="large"></el-checkbox>
-          </el-col>
-          <el-col :span="12" :xs="24" class="py-4">
-          <el-checkbox v-model="checked1" label="Others" size="large"></el-checkbox>
+          <el-col :span="12" :xs="24" class="py-4" v-for="tab in tabs" :key="tab">
+            <el-checkbox
+            v-model="tab.index"
+            :label="tab.tabLabel"
+            size="large"
+            @click="getTabLicense(tab.index, tab.tabName)"
+            ></el-checkbox>
           </el-col>
       </el-row>
       <el-row>
@@ -32,14 +19,18 @@
           <p style="font-weight: bold; margin-bottom: 0px" class="fs-16">Status</p>
           </el-col>
           <el-col :span="24" class="py-4">
-          <el-radio v-model="radio1" label="1" size="large" style="color:#000;">All</el-radio>
-          </el-col>
-          <el-col :span="24" class="py-4">
-          <el-radio v-model="radio1" label="1" size="large" style="color:#000;">Pending</el-radio>
-          </el-col>
-          <el-col :span="24" class="py-4">
-          <el-radio v-model="radio1" label="1" size="large" style="color:#000;">Completed</el-radio>
-          </el-col>
+          <el-radio-group v-model="activeStatus">
+            <div style="padding-top:5px;">
+              <el-radio :label="1" size="large" style="color:#000;">All</el-radio>
+            </div>
+            <div style="padding:10px 0;">
+              <el-radio :label="2" size="large" style="color:#000;">Pending</el-radio>
+            </div>
+            <div>
+              <el-radio :label="3" size="large" style="color:#000;">Completed</el-radio>
+            </div>
+          </el-radio-group>
+        </el-col>
       </el-row>
     </div>
   </div>
@@ -54,16 +45,24 @@ export default {
       required: true,
     },
     modelValue: String,
+    getTabLicense: {
+      type: Function,
+      required: true,
+    },
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'newActiveStatus'],
   watch: {
     tabName(newTabName) {
       this.$emit('update:modelValue', newTabName);
+    },
+    activeStatus(newActiveStatus) {
+      this.$emit('newActiveStatus', newActiveStatus);
     },
   },
   data() {
     return {
       tabName: this.modelValue,
+      activeStatus: 1,
     };
   },
   methods: {

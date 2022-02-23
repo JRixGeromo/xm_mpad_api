@@ -19,17 +19,20 @@
     </el-row>
     <el-row class="hidden-xs-only">
       <el-col :span="4" class="d-flex-start">
-        <Filter/>
+        <Filter :tabs="tabOptions" :getTabLicense="getTabLicense" @newActiveStatus="newActiveStatus" />
       </el-col>
       <el-col :span="4" :offset="16" class="d-flex-end">
         <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="24" :xs="12">
+    <el-row class="hidden-sm-and-up">
+      <!-- <el-col :span="24" :xs="12">
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
+      </el-col> -->
+      <el-col :span="24" :xs="12">
+        <Filter :tabs="tabOptions" :getTabLicense="getTabLicense" @newActiveStatus="newActiveStatus" />
       </el-col>
-      <el-col :span="12" class="d-flex-end hidden-sm-and-up">
+      <el-col :span="12" class="d-flex-end">
         <SortBy :getSortBy="getSortBy" />
       </el-col>
     </el-row>
@@ -78,7 +81,7 @@ import { CONFIGURATION_NAMES } from '@/common/constants';
 import TransactionCard from '@/components/Transaction/TransactionCard.vue';
 import TransactionCardLoader from '@/components/Transaction/TransactionCardLoader.vue';
 import transactionServices from '@/services/transaction-service';
-import CustomTab from '@/components/CustomTab.vue';
+/* import CustomTab from '@/components/CustomTab.vue'; */
 import SortBy from '@/components/SortBy.vue';
 import Filter from '@/components/Filter.vue';
 import configurationServices from '@/services/configuration-service';
@@ -88,7 +91,7 @@ export default {
   components: {
     TransactionCard,
     TransactionCardLoader,
-    CustomTab,
+    /* CustomTab, */
     Filter,
     SortBy,
   },
@@ -96,7 +99,7 @@ export default {
     const transactionsList = ref([]);
     const transactionsListRes = ref([]);
     const transactionsListLoading = ref(true);
-    const activeTabName = ref('all');
+    const activeStatus = ref(1);
     const sortTabName = ref('Sort By');
     const tabOptions = ref([]);
     const pagination = ref({
@@ -123,10 +126,6 @@ export default {
           };
           return res;
         });
-        tabOptions.value.unshift({
-          tabName: 'all',
-          tabLabel: 'All',
-        });
       });
     };
 
@@ -146,25 +145,6 @@ export default {
       return data;
     };
 
-    const getSortBy = (sortBy) => {
-      if (sortBy === 'Newest') {
-        transactionsList.value = transactionsListRes.value.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-      } else {
-        transactionsList.value = transactionsListRes.value.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
-      }
-      dataList.value = transactionsList.value;
-    };
-
-    const getTransactions = async () => {
-      transactionsListRes.value = await transactionServices.getTransactions();
-      getSortBy('Newest');
-    };
-
-    onMounted(async () => {
-      getTransactions();
-      getLicenses();
-    });
-
     const paginationCallback = (page) => {
       const newPagination = {
         ...pagination.value,
@@ -179,6 +159,55 @@ export default {
       }, 1);
       pagination.value = transDataList.pagination;
     };
+
+    const newActiveStatus = (status) => {
+      activeStatus.value = status;
+      console.log('newActiveStatus', status);
+      if (status === 2) {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.paymentStatus.toLowerCase().includes('pending_payment'));
+      } else if (status === 3) {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.paymentStatus.toLowerCase().includes('completed_payment'));
+      } else {
+        transactionsList.value = transactionsListRes.value;
+      }
+      dataList.value = transactionsList.value;
+      paginationCallback(1);
+    };
+
+    const getTabLicense = (tabIndex, tabName) => {
+      console.log('tabIndex', tabIndex);
+      console.log('tabName', tabName);
+      console.log('activeStatus', activeStatus.value);
+      tabOptions.value.forEach((element) => {
+        if (tabName === element.tabName) {
+          console.log('if statement');
+          console.log('if transactionsListRes', transactionsListRes.value);
+          /* transactionsList.value = transactionsListRes.value.filter((x) => x.license.toLowerCase().includes(tabName));
+          dataList.value = transactionsList.value; */
+        }
+      });
+    };
+
+    const getSortBy = (sortBy) => {
+      if (sortBy === 'Newest') {
+        transactionsList.value = transactionsListRes.value.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      } else {
+        transactionsList.value = transactionsListRes.value.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
+      }
+      dataList.value = transactionsList.value;
+      newActiveStatus(activeStatus.value);
+    };
+
+    const getTransactions = async () => {
+      transactionsListRes.value = await transactionServices.getTransactions();
+      getSortBy('Newest');
+    };
+
+    onMounted(async () => {
+      getTransactions();
+      getLicenses();
+    });
+
     watch(transactionsList, () => {
       const transDataList = slicePage({
         ...pagination.value,
@@ -190,7 +219,7 @@ export default {
     return {
       getSortBy,
       tabOptions,
-      activeTabName,
+      activeStatus,
       sortTabName,
       transactionsList,
       transactionsListRes,
@@ -198,6 +227,8 @@ export default {
       transactionsListLoading,
       pagination,
       paginationCallback,
+      getTabLicense,
+      newActiveStatus,
     };
   },
 };

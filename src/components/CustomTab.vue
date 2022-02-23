@@ -5,7 +5,7 @@
       class="tab-item"
       :key="tab"
       :class="tabName === tab.tabName ? 'selected' : ''"
-      @click="tabName = tab.tabName"
+      @click="tabName = tab.tabName; getTabLicense(tab.tabName)"
     >
       <div>{{ tab.tabLabel }}</div>
     </div>
@@ -18,6 +18,7 @@
           :key="tab"
           :label="tab.tabLabel"
           :value="tab.tabName"
+          @click="getTabLicense(tab.tabName)"
         >
         </el-option>
       </el-select>
@@ -34,6 +35,10 @@ export default {
       required: true,
     },
     modelValue: String,
+    getTabLicense: {
+      type: Function,
+      required: true,
+    },
   },
   emits: ['update:modelValue'],
   watch: {
