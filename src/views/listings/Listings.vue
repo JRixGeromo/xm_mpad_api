@@ -158,29 +158,11 @@ export default {
     };
 
     const getTabLicense = (tab) => {
-      if (tab === 'dc') {
-        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
-        dataList.value = listings.value;
-      } else if (tab === 'disney') {
-        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
-        dataList.value = listings.value;
-      } else if (tab === 'marvel') {
-        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
-        dataList.value = listings.value;
-      } else if (tab === 'warner bros') {
-        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
-        dataList.value = listings.value;
-      } else if (tab === 'star wars') {
-        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
-        dataList.value = listings.value;
-      } else if (tab === 'hasbro') {
-        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
-        dataList.value = listings.value;
-      } else if (tab === 'other') {
-        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
+      if (tab === 'all') {
+        listings.value = listingRes.value.data;
         dataList.value = listings.value;
       } else {
-        listings.value = listingRes.value.data;
+        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
         dataList.value = listings.value;
       }
       paginationCallback(1);

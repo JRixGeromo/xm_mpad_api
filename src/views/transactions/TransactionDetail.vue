@@ -80,7 +80,29 @@
           <el-col :span="12" :xs="24">
               <div style="height:300px; margin:40px 0;">
                 <ul class="events">
-                  <li>
+                  <li v-for="(transactionEvent, index) in transactionDetail.transactionEvents" :key="transactionEvent">
+                    <time :datetime="transactionEvent.createdDate"></time>
+                    <span v-if="index !== transactionDetail.transactionEvents.length - 1">
+                    </span>
+                    <div
+                        style="
+                          color:#000;
+                          line-height:24px;
+                          font-weight:400;
+                          margin-top:-5px;
+                          margin-left:20px;
+                          margin-bottom:20px;"
+                        class="font-p">
+                        {{dayjs(transactionEvent.createdDate).format('DD/MM/YYYY hh:mm A')}} <br/>
+                        Transaction number: {{transactionDetail.refNo}} <br/>
+                        {{transactionEvent.event}} <br/>
+                        <div
+                          @click="dialogVisiblePaymentDetails = true;"
+                          style="color:rgb(7, 115, 255); cursor:pointer;"><u>View payment details</u>
+                        </div>
+                      </div>
+                  </li>
+                  <!-- <li>
                     <time datetime="10:03"></time>
                     <span>
                       <div
@@ -117,10 +139,6 @@
                       Transaction number: a1234t235g32f9v4cv <br/>
                       desmondzth made an offer of SGD$700.00
                     </div>
-                  </li>
-                  <!-- <li>
-                    <time datetime="10:03"></time>
-                    <span>Here 4</span>
                   </li> -->
                 </ul>
               </div>
@@ -245,6 +263,7 @@ import productServices from '@/services/product-service';
 import profileServices from '@/services/profile-service';
 import transactionServices from '@/services/transaction-service';
 import { useRoute } from 'vue-router';
+import dayjs from 'dayjs';
 
 export default {
   setup() {
@@ -261,6 +280,10 @@ export default {
       transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
       transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
       transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
+      console.log('transactionDetail', transactionDetail.value);
+      console.log('transactionProduct', transactionProduct.value);
+      console.log('transactionSeller', transactionSeller.value);
+      console.log('transactionBuyer', transactionBuyer.value);
     });
 
     const store = useStore();
@@ -274,6 +297,7 @@ export default {
       transactionBuyer,
       dialogVisiblePaymentDetails,
       dialogVisiblePaymentApproved,
+      dayjs,
     };
   },
 };
@@ -304,7 +328,6 @@ export default {
   }
 
   .events span {
-    padding: 0 1.5em 1.5em 1.5em;
     position: relative;
   }
 
