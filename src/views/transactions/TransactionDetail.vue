@@ -280,10 +280,6 @@ export default {
       transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
       transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
       transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
-      console.log('transactionDetail', transactionDetail.value);
-      console.log('transactionProduct', transactionProduct.value);
-      console.log('transactionSeller', transactionSeller.value);
-      console.log('transactionBuyer', transactionBuyer.value);
     });
 
     const store = useStore();
