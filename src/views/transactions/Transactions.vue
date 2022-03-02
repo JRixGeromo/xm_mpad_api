@@ -162,7 +162,6 @@ export default {
 
     const newActiveStatus = (status) => {
       activeStatus.value = status;
-      console.log('newActiveStatus', status);
       if (status === 2) {
         transactionsList.value = transactionsListRes.value.filter((x) => x.paymentStatus.toLowerCase().includes('pending_payment'));
       } else if (status === 3) {
@@ -175,13 +174,8 @@ export default {
     };
 
     const getTabLicense = (tabIndex, tabName) => {
-      console.log('tabIndex', tabIndex);
-      console.log('tabName', tabName);
-      console.log('activeStatus', activeStatus.value);
       tabOptions.value.forEach((element) => {
         if (tabName === element.tabName) {
-          console.log('if statement');
-          console.log('if transactionsListRes', transactionsListRes.value);
           /* transactionsList.value = transactionsListRes.value.filter((x) => x.license.toLowerCase().includes(tabName));
           dataList.value = transactionsList.value; */
         }

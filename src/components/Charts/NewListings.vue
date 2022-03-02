@@ -27,7 +27,6 @@ export default {
         date: dt, name: `name${i}`, value: visits,
       });
     }
-    console.log(data);
     chart.data = data;
 
     const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
