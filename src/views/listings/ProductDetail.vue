@@ -19,7 +19,7 @@
         </p>
       </router-link>
     </el-row>
-    <div>
+    <!-- <div>
       <el-row style="justify-content: center;">
         <el-col :span="14" :xs="24">
           <div
@@ -41,7 +41,7 @@
           </div>
         </el-col>
       </el-row>
-    </div>
+    </div> -->
     <el-row v-if="productDetail && sellerDetail">
       <el-col :span="12" :xs="24" style="display: flex; align-items: center; margin: 20px 0;">
         <div style="display: flex;">
