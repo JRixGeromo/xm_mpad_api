@@ -70,7 +70,7 @@
                 "
               >
                 <p style="font-weight: 700; font-size: 16px;">Status:</p>
-                <p style="font-weight: 400; font-size: 16px;">{{ transactionDetail.status }}</p>
+                <p style="font-weight: 400; font-size: 16px;">{{ transactionStatus }}</p>
               </div>
           </el-col>
       </el-row>
@@ -274,12 +274,15 @@ export default {
     const transactionDetail = ref([]);
     const dialogVisiblePaymentDetails = ref(false);
     const dialogVisiblePaymentApproved = ref(false);
+    const transactionStatus = ref('');
 
     onMounted(async () => {
       transactionDetail.value = await transactionServices.getTransactionById(route.params.id);
       transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
       transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
       transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
+
+      transactionStatus.value = transactionDetail.value.status.replace('_', ' ');
     });
 
     const store = useStore();
@@ -294,6 +297,7 @@ export default {
       dialogVisiblePaymentDetails,
       dialogVisiblePaymentApproved,
       dayjs,
+      transactionStatus,
     };
   },
 };
