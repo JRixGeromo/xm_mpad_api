@@ -14,7 +14,7 @@
     </el-row>
     <el-row>
       <router-link to="/transactions">
-        <p>
+        <p class="fs-20" style="font-weight:400; color:#000;">
           <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Transactions
         </p>
       </router-link>
@@ -35,7 +35,7 @@
                   <div>{{ transactionProduct.name }}</div>
                   <div>{{ transactionProduct.license }}, {{ transactionProduct.scale }} Scale</div>
               </div>
-              <div class="font-bold hidden-xs-only">{{ `SGD$${transactionProduct.listingPrice.toFixed(2)}` }}</div>
+              <div class="font-bold fm-montserrat hidden-xs-only">{{ `SGD$${transactionProduct.listingPrice.toFixed(2)}` }}</div>
               </div>
           </el-col>
           <el-col :span="6" :xs="24" class="py-10">
@@ -69,8 +69,8 @@
                 border-radius: 10px;
                 "
               >
-                <p style="font-weight: 700; font-size: 16px;">Status:</p>
-                <p style="font-weight: 400; font-size: 16px;">{{ transactionStatus }}</p>
+                <p class="fs-20 fw-700 fm-montserrat">Status:</p>
+                <p style="font-weight: 300; font-size: 16px;">{{ transactionStatus }}</p>
               </div>
           </el-col>
       </el-row>
@@ -88,7 +88,7 @@
                         style="
                           color:#000;
                           line-height:24px;
-                          font-weight:400;
+                          font-weight:300;
                           margin-top:-5px;
                           margin-left:20px;
                           margin-bottom:20px;"
@@ -150,7 +150,7 @@
     <el-dialog
       v-model="dialogVisiblePaymentDetails"
       title="Payment Details"
-      :width="isMobileView ? '100%' : '50%'"
+      :width="isMobileView ? '90%' : '50%'"
     >
       <div>
         <el-row>

@@ -291,14 +291,14 @@
 }
 
 .approve-btn {
-  background-color: #0D993D !important;
+  background-color: #31AC62 !important;
   color: #fff !important;
-  border-color: #0D993D !important;
+  border-color: #31AC62 !important;
   &:hover,
   &:active {
-    background-color: #0D993D;
+    background-color: #31AC62;
     color: #fff !important;
-    border-color: #0D993D !important;
+    border-color: #31AC62 !important;
     }
 }
 
@@ -655,10 +655,10 @@ textarea:focus~span {
   }
 
   .el-select-dropdown__item {
-    color      : #000000DE;
+    color      : #000000;
     font-family: $font-family-prompt;
-    font-size  : 20px;
-    font-weight: 400;
+    font-size  : 16px;
+    font-weight: 300;
 
     &:hover,
     &.selected {
@@ -990,7 +990,6 @@ textarea:focus~span {
   line-height     : 29px;
   letter-spacing  : 0em;
   text-align      : center;
-  background-color: $--color-secondary;
 }
 
 .header-nav {
@@ -1432,13 +1431,16 @@ hr.solid {
      border-bottom: unset;
      font-weight: 700;
      font-family: $font-family-montserrat;
+     color: #000;
  }
  .el-collapse-item__wrap {
    border-bottom: unset;
  }
 
  .el-collapse-item__content {
+  color: #000;
    font-size: 16px !important;
+   font-weight: 300;
  }
 
 /* Steps description */
@@ -1450,6 +1452,7 @@ hr.solid {
 /* Checkbox */
 .el-checkbox__label {
   color: #000;
+  font-weight: 300;
 }
 
 /* mobile center */
@@ -1469,8 +1472,18 @@ hr.solid {
   }
 }
 
+.el-dialog__title {
+  font-size: 20px;
+  font-family: $font-family-montserrat;
+  color: #000;
+  @media only screen and (max-width: 768px) {
+    font-size: 16px;
+  }
+}
+
 .el-dialog__body {
   padding: 30px 80px;
+  font-size: 16px;
   @media only screen and (max-width: 768px) {
     padding: 20px;
   }
@@ -1494,19 +1507,24 @@ hr.solid {
     padding: 20px 0;
     background-color:#143649;
     span {
+      font-size: 20px;
       color: #fff;
       text-transform: uppercase;
       font-family: $font-family-montserrat;
+      @media only screen and (max-width: 768px) {
+        font-size: 16px;
+      }
     }
     .el-dialog__headerbtn .el-dialog__close {
       color: #fff;
     }
   }
+
   .el-dialog__body {
     color: #000;
     font-size: 16px;
     @media only screen and (max-width: 768px) {
-      font-size: 14px;
+      font-size: 12px;
     }
   }
   .dialog-footer {
@@ -1517,6 +1535,14 @@ hr.solid {
 
 /* Select Styles */ 
 .custom-select {
+  .el-input {
+    input {
+      font-family: $font-family-prompt !important;
+      font-size: 16px !important;
+      font-weight: 300 !important;
+      color: #000 !important;
+    }
+  }
   .el-input__inner {
     border: unset !important;
   }
@@ -1524,8 +1550,26 @@ hr.solid {
     color: #000 !important;
     font-weight: bold !important;
   }
+  ::placeholder {
+    color: #000 !important;
+    font-size: 16px !important;
+    font-weight: 300 !important;
+    font-family: $font-family-prompt !important;
+  }
 }
 
-::placeholder {
-  color: #000 !important;
+/* Pagination Styles */ 
+.el-pagination {
+  font-size: 16px;
+  color: #000;
+  font-weight: 300;
+  button {
+    font-size: 16px;
+  }
+  .btn-next, .btn-prev{
+    color: #000;
+  }
+  .el-pager li {
+    font-size: 16px;
+  }
 }

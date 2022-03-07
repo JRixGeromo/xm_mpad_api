@@ -14,7 +14,7 @@
     </el-row>
     <el-row>
       <router-link to="/listings">
-        <p>
+        <p class="fs-20" style="font-weight:400; color:#000;">
           <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Listings
         </p>
       </router-link>

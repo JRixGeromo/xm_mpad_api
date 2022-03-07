@@ -48,7 +48,7 @@
       </el-col>
     </el-row>
     <el-row v-else>
-      <el-col v-for="index in 4" :key="index" :xs="24" :sm="8" class="px-10">
+      <el-col v-for="index in 3" :key="index" :xs="24" :sm="8" class="px-10">
         <ProductCardLoader />
       </el-col>
     </el-row>

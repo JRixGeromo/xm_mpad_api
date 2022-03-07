@@ -83,7 +83,7 @@
                 <el-row>
                   <el-col :span="24">
                     <div style="width: 160px;">
-                      <input type="number" placeholder="Type...." style="height: 10px;"> <b>%</b>
+                      <input type="number" placeholder="Type...." style="height: 10px;"> <span class="fw-700 fs-20 fm-montserrat">%</span>
                     </div>
                   </el-col>
                 </el-row>

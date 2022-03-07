@@ -22,7 +22,7 @@
               formLabel="Password"
             />
           </div>
-          <div class="right-text fs-12" style="margin-top: -10px; margin-bottom: 20px;">
+          <div class="right-text fs-12" style="margin-top: -10px; margin-bottom: 20px; color:#575757;">
             <span class="sub-label-light fs-12">Forgot password?</span>
           </div>
           <el-form-item>
