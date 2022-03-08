@@ -13,7 +13,11 @@
       </el-col>
     </el-row>
     <el-row>
-      <router-link to="/users"><p><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Users</p></router-link>
+      <router-link to="/users">
+        <p class="fs-20" style="font-weight:400; color:#000;">
+          <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Users
+        </p>
+      </router-link>
     </el-row>
     <div>
       <el-row v-if="profileDetail">

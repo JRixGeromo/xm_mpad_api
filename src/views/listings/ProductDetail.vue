@@ -14,12 +14,12 @@
     </el-row>
     <el-row>
       <router-link to="/listings">
-        <p>
+        <p class="fs-20" style="font-weight:400; color:#000;">
           <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Listings
         </p>
       </router-link>
     </el-row>
-    <div>
+    <!-- <div>
       <el-row style="justify-content: center;">
         <el-col :span="14" :xs="24">
           <div
@@ -41,9 +41,9 @@
           </div>
         </el-col>
       </el-row>
-    </div>
+    </div> -->
     <el-row v-if="productDetail && sellerDetail">
-      <el-col :span="12" :xs="24" style="display: flex; align-items: center; margin: 20px 0;">
+      <el-col :span="12" :xs="24" style="display: flex; align-items: center; justify-content: center; margin: 20px 0;">
         <div style="display: flex;">
           <div style="width: 240px; height: 170px;">
             <el-image
@@ -54,7 +54,7 @@
               class="profile-img"
             ></el-image>
           </div>
-          <div style="display: flex; flex-flow: column; padding-left: 10px;">
+          <div style="display: flex; flex-flow: column; padding-left: 10px;" class="hidden-xs-only">
             <div>
               <div>{{ productDetail.name }}</div>
               <div>{{ `${productDetail.license}, ${productDetail.scale} Scale` }}</div>
@@ -62,6 +62,19 @@
             <div
               style="margin-top: auto; font-weight: 700;"
             >{{ `SGD$${productDetail.listingPrice.toFixed(2)}` }}</div>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="12" :xs="24" class="hidden-sm-and-up" style="display: flex; align-items: center; margin: 20px 0;">
+        <div class="fs-16 fw-300" style="display: flex; flex-flow: column; padding-left: 10px; width:100%;">
+          <div>
+            <div>{{ productDetail.name }}</div>
+            <div>{{ `${productDetail.license}, ${productDetail.scale} Scale` }}</div>
+          </div>
+          <div
+            class="fm-montserrat right-text"
+            style="margin-top: auto; font-weight: 700;"
+          >{{ `SGD$${productDetail.listingPrice.toFixed(2)}` }}
           </div>
         </div>
       </el-col>
@@ -100,7 +113,7 @@
         <el-row>
           <el-col :span="24">
             <div style="width: 100%; padding: 30px 0;">
-              <div class="sub-header left-text fs-20" style="margin-bottom: 10px;">What you get</div>
+              <div class="left-text fs-20 sub-header" style="margin-bottom: 10px;">What you get</div>
               <div
                 class="left-text fs-16 product-desc"
               >1. 1:6 scale statue collectible of Batman Rebirth</div>
@@ -109,7 +122,7 @@
             </div>
             <div class="d-flex-column hidden-sm-and-up" style="align-items:center;">
               <div style="width: 200px; text-align:center;">
-                <div style="font-weight: 700; font-size:16px;">Seller</div>
+                <div class="fm-montserrat" style="font-weight: 700; font-size:16px;">Seller</div>
                 <div class="seller-detail">
                   <el-image
                     style="width: 100px; height: 100px; border-radius: 50%;"
@@ -156,7 +169,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="24" style="margin: 50px 0; justify-content:flex-end;" class="d-flex">
+      <el-col :span="24" class="listing-status" >
         <div style="width: 200px; text-align: center;">
           <p>Something not right?</p>
           <div
@@ -168,7 +181,7 @@
             <span style="padding-left: 10px;">Lock Listing</span>
           </div>
           <div
-            style="background-color: #31AC62; font-weight:700; padding: 10px 20px; cursor: pointer; text-transform: uppercase;"
+            style="background-color: #31AC62; font-weight:700; padding: 10px 20px; cursor: pointer; text-transform: uppercase; border-radius: 4px;"
             @click="dialogLock=true"
             v-else
           >
@@ -290,6 +303,9 @@ export default {
   font-weight: 700;
   font-size: 20px;
   font-family: 'Montserrat';
+  @media only screen and (max-width: 768px) {
+    font-size: 16px !important;
+  }
 }
 
 .seller-detail {
@@ -305,11 +321,17 @@ export default {
   font-weight: bold !important;
   font-size: 20px !important;
   line-height: 24px !important;
+  @media only screen and (max-width: 768px) {
+    font-size: 16px !important;
+  }
 }
 
 .product-desc {
   white-space: pre-wrap;
   overflow-wrap: break-word;
+  @media only screen and (max-width: 768px) {
+    font-size: 12px !important;
+  }
 }
 
 .additional-info {
@@ -319,6 +341,15 @@ export default {
 
   .sub-header {
     min-width: 160px;
+  }
+}
+
+.listing-status {
+  display: flex;
+  justify-content: flex-end;
+  margin: 50px 0;
+  @media only screen and (max-width: 768px) {
+    justify-content: center;
   }
 }
 </style>

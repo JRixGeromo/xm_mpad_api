@@ -6,7 +6,7 @@
         </div>
         <div style="text-align: left; line-height: 1.7" class="sub-label-light fs-16">
           <div>{{ productDetail.name }}</div>
-          <div>{{ productDetail.series }}</div>
+          <div>{{ productDetail.license }}, {{ productDetail.scale }} Scale</div>
         </div>
         <div
           style="padding-bottom: 10px; text-align: right; line-height: 2.5"

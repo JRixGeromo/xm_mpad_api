@@ -39,7 +39,7 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <p class="sub-title">New Listings</p>
+        <p class="sub-title" :class="isMobileView ? 'center-text' : ''">New Listings</p>
       </el-col>
     </el-row>
     <el-row v-if="products">
@@ -58,7 +58,8 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { useStore } from 'vuex';
 import ProductCard from '@/components/Product/ProductCard.vue';
 import ProductCardLoader from '@/components/Product/ProductCardLoader.vue';
 import productServices from '@/services/product-service';
@@ -87,8 +88,12 @@ export default {
       getProducts();
     });
 
+    const store = useStore();
+    const isMobileView = computed(() => store.state.layout.isMobileView);
+
     return {
       products,
+      isMobileView,
     };
   },
 };

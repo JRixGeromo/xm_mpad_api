@@ -1,5 +1,5 @@
 <template>
-  <div id="filter-bar" @click="showHideFilter" class="fs-20">Filter <i class="xm-el-icon-plus"></i>
+  <div id="filter-bar" @click="showHideFilter" class="fs-16">Filter <i class="xm-el-icon-plus"></i>
     <div id="filter-div" style="display: none;" class="font-m">
       <el-row>
           <el-col :span="24">

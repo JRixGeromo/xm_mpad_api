@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="6" :xs="12">
         <div class="product-img-wrapper d-flex-column">
-          <div>{{ dayjs(transactionDetail.createdDate).format('DD/MM/YYYY') }}</div>
+          <div class="hidden-sm-and-down">{{ dayjs(transactionDetail.createdDate).format('DD/MM/YYYY') }}</div>
           <img class="product-img" :src="transactionProduct.images[0].productImageUrl" />
         </div>
       </el-col>
@@ -16,7 +16,7 @@
             <div>{{ transactionProduct.name }}</div>
             <div>{{ transactionProduct.license }}, {{ transactionProduct.scale }} Scale</div>
           </div>
-          <div class="font-bold">SGD${{ transactionProduct.listingPrice.toLocaleString() }}</div>
+          <div class="font-bold fm-montserrat">SGD${{ transactionProduct.listingPrice.toLocaleString() }}</div>
         </div>
       </el-col>
       <el-col :span="6" :xs="12">
@@ -35,12 +35,12 @@
               </div>
             </div>
 
-            <div class="hidden-sm-and-up">
-              <div class="px-10">
+            <div class="hidden-sm-and-up d-flex">
+              <div class="px-10 fs-12">
                 <div class="font-bold">Seller</div>
                 <div>{{transactionSeller.userName}}</div>
               </div>
-              <div class="px-10">
+              <div class="px-10 fs-12">
                 <div class="font-bold">Buyer</div>
                 <div>{{transactionBuyer.userName}}</div>
               </div>
@@ -58,13 +58,13 @@
       <el-col :span="12" class="hidden-sm-and-up">
         <div
               style="text-align: left; line-height: 1.7;"
-              class="sub-label-light fs-16 d-flex-column h-100"
+              class="sub-label-light fs-12 d-flex-column h-100"
           >
             <div class="d-flex">
               <div>
                 <div>{{ transactionProduct.name }}</div>
                 <div>{{ transactionProduct.license }}, {{ transactionProduct.scale }} Scale</div>
-                <div class="font-bold">SGD${{ transactionProduct.listingPrice.toLocaleString() }}</div>
+                <div class="font-bold fm-montserrat fs-16">SGD${{ transactionProduct.listingPrice.toLocaleString() }}</div>
               </div>
             </div>
           </div>
@@ -76,8 +76,8 @@
           >
             <div class="d-flex">
               <div>
-                <div class="font-bold fs-20 font-m">Status</div>
-              <div>{{ transactionProduct.status }}</div>
+                <div class="font-bold fs-16 font-m">Status</div>
+              <div class="fs-12">{{ transactionProduct.status }}</div>
               </div>
             </div>
           </div>
