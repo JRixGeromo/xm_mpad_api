@@ -21,19 +21,19 @@
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">New Listings</p>
-          <BarChart backgroundColor="#f18c14" />
+          <BarChart backgroundColor="#f18c14" v-if="products" :data="products" />
         </div>
       </el-col>
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">Purchases</p>
-          <BarChart backgroundColor="#23a74c" />
+          <BarChart backgroundColor="#23a74c" v-if="products" :data="products" />
         </div>
       </el-col>
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">Payments</p>
-          <BarChart backgroundColor="#1b82f1" />
+          <BarChart backgroundColor="#1b82f1" v-if="products" :data="products" />
         </div>
       </el-col>
     </el-row>
