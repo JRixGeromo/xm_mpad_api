@@ -2,7 +2,7 @@
   <BarChart :chartData="chartsData" :options="options" />
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref } from 'vue';
 import { BarChart } from 'vue-chart-3';
 import { Chart, registerables } from 'chart.js';
