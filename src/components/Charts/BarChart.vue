@@ -6,6 +6,7 @@
 import { defineComponent, ref } from 'vue';
 import { BarChart } from 'vue-chart-3';
 import { Chart, registerables } from 'chart.js';
+import dayjs from 'dayjs';
 
 Chart.register(...registerables);
 
@@ -29,9 +30,10 @@ export default defineComponent({
     const dataLabels = ref([]);
     const dataDatasetsData = ref([]);
     props.data.forEach((element) => {
-      dataLabels.value.push(element.license);
+      dataLabels.value.push(dayjs(element.createdDate).format('MM/DD'));
       dataDatasetsData.value.push(element.shippingFee);
     });
+    console.log('data', props.data);
     console.log('dataLabels', dataLabels.value);
     console.log('dataDatasetsData', dataDatasetsData.value);
     const chartsData = {
