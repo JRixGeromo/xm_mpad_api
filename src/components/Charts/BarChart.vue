@@ -1,19 +1,18 @@
 <template>
-  <BarChart :chartData="chartsData" :options="options" />
+  <div>
+    <apexcharts :options="options" :series="series"></apexcharts>
+  </div>
 </template>
 
 <script>
 import { defineComponent, ref } from 'vue';
-import { BarChart } from 'vue-chart-3';
-import { Chart, registerables } from 'chart.js';
 import dayjs from 'dayjs';
-
-Chart.register(...registerables);
+import VueApexCharts from 'vue3-apexcharts';
 
 export default defineComponent({
-  name: 'Home',
+  name: 'Chart',
   components: {
-    BarChart,
+    apexcharts: VueApexCharts,
   },
   props: {
     backgroundColor: {
@@ -36,33 +35,40 @@ export default defineComponent({
     console.log('data', props.data);
     console.log('dataLabels', dataLabels.value);
     console.log('dataDatasetsData', dataDatasetsData.value);
-    const chartsData = {
-      /* labels: ['01/01', '03/01', '05/01', '07/01', '09/01'], */
-      labels: dataLabels.value,
-      datasets: [
-        {
-          /* data: [30, 40, 60, 70, 110], */
-          data: dataDatasetsData.value,
-          backgroundColor: props.backgroundColor,
-        },
-      ],
-    };
 
     const options = ref({
-      responsive: true,
-      maintainAspectRatio: true,
-      height: 400,
-      plugins: {
-        legend: {
-          display: false,
-          position: 'top',
+      chart: {
+        id: 'vuechart-example',
+        type: 'bar',
+      },
+      xaxis: {
+        categories: dataLabels.value,
+      },
+      plotOptions: {
+        bar: {
+          dataLabels: {
+            position: 'top', // top, center, bottom
+          },
+        },
+      },
+      dataLabels: {
+        enabled: true,
+        offsetY: -20,
+        style: {
+          fontSize: '12px',
+          colors: ['#304758'],
         },
       },
     });
 
+    const series = ref([{
+      name: 'series-1',
+      data: dataDatasetsData.value,
+    }]);
+
     return {
-      chartsData,
       options,
+      series,
     };
   },
 });
