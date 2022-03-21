@@ -56,6 +56,14 @@ function getPaymentsChart() {
     });
 }
 
+function approveTransaction(transactionId) {
+  return MpApiIni().get(`/api/mp/transaction/v1/${transactionId}/transaction/approve`, SetAuthHeader())
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
 const services = {
   getUserSoldTransactions,
   getUserBoughtTransactions,
@@ -64,6 +72,7 @@ const services = {
   getTransactionById,
   getPurchasesChart,
   getPaymentsChart,
+  approveTransaction,
 };
 
 export default services;

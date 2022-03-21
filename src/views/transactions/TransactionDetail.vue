@@ -249,9 +249,7 @@
           ">CANCEL</el-button>
         <el-button
           class="font-bold approve-btn custom-btn"
-          @click="
-            dialogVisiblePaymentApproved = false;
-        ">CONFIRM</el-button>
+          @click="approveTransaction(transactionDetail.productId)">CONFIRM</el-button>
       </span>
     </template>
   </el-dialog>
@@ -291,6 +289,11 @@ export default {
       / transactionDetail.value.price) * 100).toFixed(2);
     });
 
+    const approveTransaction = (productId) => {
+      transactionServices.approveTransaction(productId);
+      dialogVisiblePaymentApproved.value = false;
+    };
+
     const store = useStore();
     const isMobileView = computed(() => store.state.layout.isMobileView);
 
@@ -306,6 +309,7 @@ export default {
       dialogVisiblePaymentApproved,
       dayjs,
       transactionStatus,
+      approveTransaction,
     };
   },
 };
