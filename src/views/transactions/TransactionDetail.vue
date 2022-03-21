@@ -158,31 +158,31 @@
             <span>Transaction ID:</span>
           </el-col>
           <el-col :span="11" :offset="2">
-            <span>123456</span>
+            <span>{{transactionDetail.refNo}} </span>
           </el-col>
           <el-col :span="9" :offset="2">
             <span>Date and Time:</span>
           </el-col>
           <el-col :span="11" :offset="2">
-            <span>02/01/2021 13:55</span>
+            <span>{{dayjs(transactionDetail.createdDate).format('DD/MM/YYYY hh:mm A')}} </span>
           </el-col>
           <el-col :span="9" :offset="2">
             <span>Amount:</span>
           </el-col>
           <el-col :span="11" :offset="2">
-            <span>SGD$4000.00</span>
+            <span>SGD${{transactionDetail.price}}</span>
           </el-col>
           <el-col :span="9" :offset="2">
             <span>XM Comission:</span>
           </el-col>
           <el-col :span="11" :offset="2">
-            <span>5%</span>
+            <span>{{configuration[0].configurations[0].value}}%</span>
           </el-col>
           <el-col :span="9" :offset="2">
             <span>Seller Receives:</span>
           </el-col>
           <el-col :span="11" :offset="2">
-            <span>SGD$3800.00</span>
+            <span>SGD${{ sellerReceives }}</span>
           </el-col>
         </el-row>
       </div>
@@ -263,6 +263,7 @@ import { useStore } from 'vuex';
 import productServices from '@/services/product-service';
 import profileServices from '@/services/profile-service';
 import transactionServices from '@/services/transaction-service';
+import configurationServices from '@/services/configuration-service';
 import { useRoute } from 'vue-router';
 import dayjs from 'dayjs';
 
@@ -273,6 +274,8 @@ export default {
     const transactionSeller = ref([]);
     const transactionBuyer = ref([]);
     const transactionDetail = ref([]);
+    const configuration = ref([]);
+    const sellerReceives = ref(0);
     const dialogVisiblePaymentDetails = ref(false);
     const dialogVisiblePaymentApproved = ref(false);
     const transactionStatus = ref('');
@@ -282,8 +285,10 @@ export default {
       transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
       transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
       transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
-
+      configuration.value = await configurationServices.getConfigurationByName('Platform Settings');
       transactionStatus.value = transactionDetail.value.status.replace('_', ' ');
+      sellerReceives.value = (transactionDetail.value.price - (configuration.value[0].configurations[0].value
+      / transactionDetail.value.price) * 100).toFixed(2);
     });
 
     const store = useStore();
@@ -295,6 +300,8 @@ export default {
       isMobileView,
       transactionSeller,
       transactionBuyer,
+      configuration,
+      sellerReceives,
       dialogVisiblePaymentDetails,
       dialogVisiblePaymentApproved,
       dayjs,
