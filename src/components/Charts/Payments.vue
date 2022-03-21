@@ -27,14 +27,13 @@ export default defineComponent({
   },
   setup(props) {
     const dataLabels = ref([]);
-    const dataDatasetsData = ref([]);
+    const dataDatasetsApproved = ref([]);
+    const dataDatasetsRejected = ref([]);
     props.data.forEach((element) => {
-      dataLabels.value.push(dayjs(element.createdDate).format('MM/DD'));
-      dataDatasetsData.value.push(element.shippingFee);
+      dataLabels.value.push(dayjs(element.date).format('MM/DD'));
+      dataDatasetsApproved.value.push(element.approved);
+      dataDatasetsRejected.value.push(element.rejected);
     });
-    console.log('data', props.data);
-    console.log('dataLabels', dataLabels.value);
-    console.log('dataDatasetsData', dataDatasetsData.value);
 
     const options = ref({
       chart: {
@@ -49,19 +48,17 @@ export default defineComponent({
         },
       },
       colors: ['#0D993D', '#AC3131'],
-      /*
       fill: {
         type: ['gradient'],
         gradient: {
           shade: 'light',
           type: 'vertical',
           shadeIntensity: 0.25,
-          opacityFrom: 0.5,
+          opacityFrom: 0.8,
           opacityTo: 0.9,
           stops: [0, 100],
         },
       },
-      */
       xaxis: {
         categories: dataLabels.value,
       },
@@ -80,7 +77,7 @@ export default defineComponent({
         enabled: true,
         offsetY: -20,
         style: {
-          fontSize: '12px',
+          fontSize: '10px',
           colors: ['#304758'],
         },
       },
@@ -89,10 +86,10 @@ export default defineComponent({
     const series = ref([
       {
         name: 'Approved',
-        data: dataDatasetsData.value,
+        data: dataDatasetsApproved.value,
       }, {
         name: 'Rejected',
-        data: dataDatasetsData.value,
+        data: dataDatasetsRejected.value,
       },
     ]);
 

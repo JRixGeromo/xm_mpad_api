@@ -29,8 +29,8 @@ export default defineComponent({
     const dataLabels = ref([]);
     const dataDatasetsData = ref([]);
     props.data.forEach((element) => {
-      dataLabels.value.push(dayjs(element.createdDate).format('MM/DD'));
-      dataDatasetsData.value.push(element.shippingFee);
+      dataLabels.value.push(dayjs(element.date).format('MM/DD'));
+      dataDatasetsData.value.push(element.value);
     });
     console.log('data', props.data);
     console.log('dataLabels', dataLabels.value);

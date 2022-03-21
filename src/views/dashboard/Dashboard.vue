@@ -27,13 +27,13 @@
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">Purchases</p>
-          <Purchases backgroundColor="#23a74c" v-if="products" :data="products" />
+          <Purchases backgroundColor="#23a74c" v-if="purchases" :data="purchases" />
         </div>
       </el-col>
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">Payments</p>
-          <Payments backgroundColor="#1b82f1" v-if="products" :data="products" />
+          <Payments backgroundColor="#1b82f1" v-if="payments" :data="payments" />
         </div>
       </el-col>
     </el-row>
@@ -63,6 +63,7 @@ import { useStore } from 'vuex';
 import ProductCard from '@/components/Product/ProductCard.vue';
 import ProductCardLoader from '@/components/Product/ProductCardLoader.vue';
 import productServices from '@/services/product-service';
+import transactionServices from '@/services/transaction-service';
 import NewListings from '@/components/Charts/NewListings.vue';
 import Payments from '@/components/Charts/Payments.vue';
 import Purchases from '@/components/Charts/Purchases.vue';
@@ -81,13 +82,21 @@ export default {
   setup() {
     const products = ref(null);
     const newListings = ref(null);
+    const purchases = ref(null);
+    const payments = ref(null);
 
     onMounted(async () => {
       const productsData = await productServices.getProducts();
       products.value = productsData.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)).slice(0, 4);
 
-      const newListingsData = await productServices.newlistingcharts();
+      const newListingsData = await productServices.getNewlistingCharts();
       newListings.value = newListingsData.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
+
+      const purchasesChart = await transactionServices.getPurchasesChart();
+      purchases.value = purchasesChart.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
+
+      const paymentsChart = await transactionServices.getPaymentsChart();
+      payments.value = paymentsChart.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
 
       /*
       transactionDetail.value = await transactionServices.getTransactionById(route.params.id);
@@ -103,6 +112,8 @@ export default {
 
     return {
       products,
+      purchases,
+      payments,
       newListings,
       isMobileView,
     };

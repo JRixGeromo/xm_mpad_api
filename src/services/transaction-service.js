@@ -40,12 +40,30 @@ function getTransactionById(transactionId) {
     });
 }
 
+function getPurchasesChart() {
+  return MpApiIni().get('/api/mp/transaction/v1/transaction/dashboard/purchases', SetAuthHeader())
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+function getPaymentsChart() {
+  return MpApiIni().get('/api/mp/transaction/v1/transaction/dashboard/payments', SetAuthHeader())
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
 const services = {
   getUserSoldTransactions,
   getUserBoughtTransactions,
   payment,
   getTransactions,
   getTransactionById,
+  getPurchasesChart,
+  getPaymentsChart,
 };
 
 export default services;

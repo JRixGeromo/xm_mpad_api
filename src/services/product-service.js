@@ -144,7 +144,7 @@ function getLikedProducts() {
     });
 }
 
-function newlistingcharts() {
+function getNewlistingCharts() {
   return MpApiIni().get('/api/mp/product/v1/product/dashboard/newlistingcharts', SetAuthHeader())
     .then((response) => response.data)
     .catch((error) => {
@@ -171,7 +171,7 @@ const services = {
   getLikedProducts,
   getLikedProduct,
   getProducts,
-  newlistingcharts,
+  getNewlistingCharts,
 };
 
 export default services;
