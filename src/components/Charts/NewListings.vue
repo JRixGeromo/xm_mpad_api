@@ -1,84 +1,87 @@
 <template>
-  <div class="hello" ref="chartdiv">
+  <div>
+    <apexcharts :options="options" :series="series"></apexcharts>
   </div>
 </template>
 
 <script>
-import * as am4core from '@amcharts/amcharts4/core';
-import * as am4charts from '@amcharts/amcharts4/charts';
-import am4themesAnimated from '@amcharts/amcharts4/themes/animated';
-import { formatDate } from '@/helpers';
+import { defineComponent, ref } from 'vue';
+import dayjs from 'dayjs';
+import VueApexCharts from 'vue3-apexcharts';
 
-am4core.useTheme(am4themesAnimated);
-
-export default {
-  name: 'Listings',
-  mounted() {
-    const chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart);
-
-    chart.paddingRight = 20;
-
-    const data = [];
-    let visits = 10;
-    for (let i = 1; i < 10; i++) {
-      visits = Math.floor((Math.random() * 400));
-      const dt = formatDate(new Date(2018, 0, i));
-      data.push({
-        date: dt, name: `name${i}`, value: visits,
-      });
-    }
-    chart.data = data;
-
-    const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-    dateAxis.renderer.grid.template.location = 0;
-    dateAxis.renderer.minGridDistance = 50;
-    dateAxis.dateFormats.setKey('day', 'dd/MM');
-    dateAxis.periodChangeDateFormats.setKey('day', 'dd/MM');
-    dateAxis.fontSize = '12';
-
-    const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.tooltip.disabled = true;
-    valueAxis.renderer.minWidth = 35;
-
-    valueAxis.renderer.line.disabled = true;
-    valueAxis.renderer.labels.template.disabled = true;
-    // valueAxis.renderer.grid.template.disabled = true;
-
-    const series = chart.series.push(new am4charts.ColumnSeries());
-    series.dataFields.dateX = 'date';
-    series.dataFields.valueY = 'value';
-    series.columns.template.width = am4core.percent(55);
-
-    series.tooltipText = '{valueY.value}';
-    chart.cursor = new am4charts.XYCursor();
-
-    const labelBullet = series.bullets.push(new am4charts.LabelBullet());
-    labelBullet.label.text = '{valueY}';
-    labelBullet.label.paddingBottom = '20';
-    labelBullet.label.fontSize = '12';
-
-    // const scrollbarX = new am4charts.XYChartScrollbar();
-    // scrollbarX.series.push(series);
-    // chart.scrollbarX = scrollbarX;
-
-    series.fill = am4core.color('#f18c14');
-    series.fillOpacity = 0.7;
-
-    this.chart = chart;
+export default defineComponent({
+  name: 'Chart',
+  components: {
+    apexcharts: VueApexCharts,
   },
-
-  beforeUnmount() {
-    if (this.chart) {
-      this.chart.dispose();
-    }
+  props: {
+    backgroundColor: {
+      type: String,
+      required: true,
+      default: '#123E6B',
+    },
+    data: {
+      type: Object,
+      required: true,
+    },
   },
-};
+  setup(props) {
+    const dataLabels = ref([]);
+    const dataDatasetsData = ref([]);
+    props.data.forEach((element) => {
+      dataLabels.value.push(dayjs(element.date).format('MM/DD'));
+      dataDatasetsData.value.push(element.value);
+    });
+    console.log('data', props.data);
+    console.log('dataLabels', dataLabels.value);
+    console.log('dataDatasetsData', dataDatasetsData.value);
+
+    const options = ref({
+      chart: {
+        id: 'vuechart-example',
+        type: 'bar',
+      },
+      colors: ['#F0890F'],
+      fill: {
+        type: ['gradient'],
+        gradient: {
+          shade: 'light',
+          type: 'vertical',
+          shadeIntensity: 0.25,
+          opacityFrom: 0.8,
+          opacityTo: 0.9,
+          stops: [0, 100],
+        },
+      },
+      xaxis: {
+        categories: dataLabels.value,
+      },
+      plotOptions: {
+        bar: {
+          dataLabels: {
+            position: 'top', // top, center, bottom
+          },
+        },
+      },
+      dataLabels: {
+        enabled: true,
+        offsetY: -20,
+        style: {
+          fontSize: '10px',
+          colors: ['#304758'],
+        },
+      },
+    });
+
+    const series = ref([{
+      name: 'series-1',
+      data: dataDatasetsData.value,
+    }]);
+
+    return {
+      options,
+      series,
+    };
+  },
+});
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.hello {
-  width: 100%;
-  height: 500px;
-}
-</style>

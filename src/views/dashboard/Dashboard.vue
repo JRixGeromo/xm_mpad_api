@@ -21,19 +21,19 @@
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">New Listings</p>
-          <BarChart backgroundColor="#f18c14" v-if="products" :data="products" />
+          <NewListings backgroundColor="#f18c14" v-if="newListings" :data="newListings" />
         </div>
       </el-col>
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">Purchases</p>
-          <BarChart backgroundColor="#23a74c" v-if="products" :data="products" />
+          <Purchases backgroundColor="#23a74c" v-if="products" :data="products" />
         </div>
       </el-col>
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">Payments</p>
-          <BarChart backgroundColor="#1b82f1" v-if="products" :data="products" />
+          <Payments backgroundColor="#1b82f1" v-if="products" :data="products" />
         </div>
       </el-col>
     </el-row>
@@ -63,31 +63,39 @@ import { useStore } from 'vuex';
 import ProductCard from '@/components/Product/ProductCard.vue';
 import ProductCardLoader from '@/components/Product/ProductCardLoader.vue';
 import productServices from '@/services/product-service';
-/* import NewListings from '@/components/Charts/NewListings.vue';
+import NewListings from '@/components/Charts/NewListings.vue';
 import Payments from '@/components/Charts/Payments.vue';
-import Purchases from '@/components/Charts/Purchases.vue'; */
-import BarChart from '@/components/Charts/BarChart.vue';
+import Purchases from '@/components/Charts/Purchases.vue';
+// import BarChart from '@/components/Charts/BarChart.vue';
 
 export default {
   name: 'Dashboard',
   components: {
     ProductCard,
     ProductCardLoader,
-    /* Purchases,
+    Purchases,
     Payments,
-    NewListings, */
-    BarChart,
+    NewListings,
+    // BarChart,
   },
   setup() {
     const products = ref(null);
+    const newListings = ref(null);
 
-    const getProducts = async () => {
+    onMounted(async () => {
       const productsData = await productServices.getProducts();
       products.value = productsData.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)).slice(0, 4);
-    };
 
-    onMounted(() => {
-      getProducts();
+      const newListingsData = await productServices.newlistingcharts();
+      newListings.value = newListingsData.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
+
+      /*
+      transactionDetail.value = await transactionServices.getTransactionById(route.params.id);
+      transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
+      transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
+      transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
+      transactionStatus.value = transactionDetail.value.status.replace('_', ' ');
+      */
     });
 
     const store = useStore();
@@ -95,6 +103,7 @@ export default {
 
     return {
       products,
+      newListings,
       isMobileView,
     };
   },

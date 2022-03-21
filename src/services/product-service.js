@@ -144,6 +144,14 @@ function getLikedProducts() {
     });
 }
 
+function newlistingcharts() {
+  return MpApiIni().get('/api/mp/product/v1/product/dashboard/newlistingcharts', SetAuthHeader())
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
 const services = {
   getProductByUserId,
   getProductById,
@@ -163,6 +171,7 @@ const services = {
   getLikedProducts,
   getLikedProduct,
   getProducts,
+  newlistingcharts,
 };
 
 export default services;
