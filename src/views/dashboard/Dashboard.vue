@@ -21,19 +21,19 @@
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">New Listings</p>
-          <NewListings />
+          <BarChart backgroundColor="#f18c14" v-if="products" :data="products" />
         </div>
       </el-col>
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">Purchases</p>
-          <Purchases />
+          <BarChart backgroundColor="#23a74c" v-if="products" :data="products" />
         </div>
       </el-col>
       <el-col :span="8" :xs="24">
         <div style="text-align: center; margin: 4em 0;">
           <p class="sub-title">Payments</p>
-          <Payments />
+          <BarChart backgroundColor="#1b82f1" v-if="products" :data="products" />
         </div>
       </el-col>
     </el-row>
@@ -63,18 +63,20 @@ import { useStore } from 'vuex';
 import ProductCard from '@/components/Product/ProductCard.vue';
 import ProductCardLoader from '@/components/Product/ProductCardLoader.vue';
 import productServices from '@/services/product-service';
-import NewListings from '@/components/Charts/NewListings.vue';
+/* import NewListings from '@/components/Charts/NewListings.vue';
 import Payments from '@/components/Charts/Payments.vue';
-import Purchases from '@/components/Charts/Purchases.vue';
+import Purchases from '@/components/Charts/Purchases.vue'; */
+import BarChart from '@/components/Charts/BarChart.vue';
 
 export default {
   name: 'Dashboard',
   components: {
     ProductCard,
     ProductCardLoader,
-    Purchases,
+    /* Purchases,
     Payments,
-    NewListings,
+    NewListings, */
+    BarChart,
   },
   setup() {
     const products = ref(null);
