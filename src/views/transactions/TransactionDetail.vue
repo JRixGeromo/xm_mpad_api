@@ -213,8 +213,7 @@
         <span class="dialog-footer">
           <el-button
             class="font-bold reject-btn custom-btn"
-            @click="dialogVisiblePaymentDetails = false;
-          ">REJECT
+            @click="rejectTransaction(transactionDetail.transactionId)">REJECT
           </el-button>
           <el-button
             class="font-bold approve-btn custom-btn"
@@ -236,7 +235,7 @@
       <span>Upon confirming, buyer 'desmondtzh' 's payment of SGD$3800.00 (after 5% comission fee) will be released to seller <span style="text-decoration: underline;">'sellerusername'</span>.</span>
     </div>
       <el-input
-        v-model="textarea1"
+        v-model="remarks"
         type="textarea"
         :autosize="{ minRows: 4, maxRows: 6 }"
         placeholder="Remarks to buyer and seller (optional)"
@@ -249,7 +248,7 @@
           ">CANCEL</el-button>
         <el-button
           class="font-bold approve-btn custom-btn"
-          @click="approveTransaction(transactionDetail.productId)">CONFIRM</el-button>
+          @click="approveTransaction(transactionDetail.transactionId)">CONFIRM</el-button>
       </span>
     </template>
   </el-dialog>
@@ -277,6 +276,7 @@ export default {
     const dialogVisiblePaymentDetails = ref(false);
     const dialogVisiblePaymentApproved = ref(false);
     const transactionStatus = ref('');
+    const remarks = ref('');
 
     onMounted(async () => {
       transactionDetail.value = await transactionServices.getTransactionById(route.params.id);
@@ -289,9 +289,14 @@ export default {
       / transactionDetail.value.price) * 100).toFixed(2);
     });
 
-    const approveTransaction = (productId) => {
-      transactionServices.approveTransaction(productId);
+    const approveTransaction = (transactionId) => {
+      transactionServices.approveTransaction(transactionId);
       dialogVisiblePaymentApproved.value = false;
+    };
+
+    const rejectTransaction = (transactionId) => {
+      transactionServices.rejectTransaction(transactionId);
+      dialogVisiblePaymentDetails.value = false;
     };
 
     const store = useStore();
@@ -310,6 +315,8 @@ export default {
       dayjs,
       transactionStatus,
       approveTransaction,
+      rejectTransaction,
+      remarks,
     };
   },
 };

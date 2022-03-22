@@ -64,6 +64,14 @@ function approveTransaction(transactionId) {
     });
 }
 
+function rejectTransaction(transactionId) {
+  return MpApiIni().get(`/api/mp/transaction/v1/${transactionId}/transaction/reject`, SetAuthHeader())
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
 const services = {
   getUserSoldTransactions,
   getUserBoughtTransactions,
@@ -73,6 +81,7 @@ const services = {
   getPurchasesChart,
   getPaymentsChart,
   approveTransaction,
+  rejectTransaction,
 };
 
 export default services;
