@@ -10,6 +10,13 @@
             class="transparent"
           ></el-button>
         </span>
+        <span>
+          <input
+            class="searchStyle"
+            v-model="keyWord"
+            @input="searchThis()"
+          />
+        </span>
       </el-col>
     </el-row>
     <el-row class="hidden-xs-only">
@@ -97,6 +104,7 @@ export default {
     });
     const paginationTimeout = ref([]);
     const dataList = ref(null);
+    const keyWord = ref('');
 
     onBeforeMount(() => {
       if (paginationTimeout.value.length > 0) {
@@ -188,6 +196,11 @@ export default {
       getLicenses();
     });
 
+    const searchThis = () => {
+      dataList.value = keyWord.value ?
+        listings.value.filter((x) => x.license.toLowerCase().includes(keyWord.value.toLowerCase())) : listings.value;
+    };
+
     watch(listings, () => {
       const prodDataList = slicePage({
         ...pagination.value,
@@ -207,6 +220,8 @@ export default {
       pagination,
       paginationCallback,
       getTabLicense,
+      searchThis,
+      keyWord,
     };
   },
 };

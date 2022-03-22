@@ -10,6 +10,13 @@
             class="transparent"
           ></el-button>
         </span>
+        <span>
+          <input
+            class="searchStyle"
+            v-model="keyWord"
+            @input="searchThis()"
+          />
+        </span>
       </el-col>
     </el-row>
     <el-row class="hidden-xs-only">
@@ -104,6 +111,7 @@ export default {
     });
     const paginationTimeout = ref([]);
     const dataList = ref(null);
+    const keyWord = ref('');
 
     onBeforeMount(() => {
       if (paginationTimeout.value.length > 0) {
@@ -145,6 +153,11 @@ export default {
       return data;
     };
 
+    const searchThis = () => {
+      dataList.value = keyWord.value ?
+        listingRes.value.filter((x) => x.firstName.toLowerCase().includes(keyWord.value.toLowerCase())) : listingRes.value;
+    };
+
     onMounted(() => {
       retreiveProfiles();
     });
@@ -179,6 +192,8 @@ export default {
       dataList,
       pagination,
       paginationCallback,
+      keyWord,
+      searchThis,
     };
   },
 };
