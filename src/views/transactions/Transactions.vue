@@ -171,9 +171,9 @@ export default {
     const newActiveStatus = (status) => {
       activeStatus.value = status;
       if (status === 2) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.paymentStatus.toLowerCase().includes('pending_payment'));
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('pending_payment'));
       } else if (status === 3) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.paymentStatus.toLowerCase().includes('completed_payment'));
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('completed_payment'));
       } else {
         transactionsList.value = transactionsListRes.value;
       }
