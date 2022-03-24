@@ -24,10 +24,31 @@
               <el-radio :label="1" size="large" style="color:#000;">All</el-radio>
             </div>
             <div style="padding:10px 0;">
-              <el-radio :label="2" size="large" style="color:#000;">Pending</el-radio>
+              <el-radio :label="2" size="large" style="color:#000;">Pending Payment</el-radio>
             </div>
             <div>
-              <el-radio :label="3" size="large" style="color:#000;">Completed</el-radio>
+              <el-radio :label="3" size="large" style="color:#000;">Completed Payment</el-radio>
+            </div>
+            <div style="padding:10px 0;">
+              <el-radio :label="4" size="large" style="color:#000;">Failed Payment</el-radio>
+            </div>
+            <div>
+              <el-radio :label="5" size="large" style="color:#000;">Item Ship Out</el-radio>
+            </div>
+            <div style="padding:10px 0;">
+              <el-radio :label="6" size="large" style="color:#000;">Item Received</el-radio>
+            </div>
+            <div>
+              <el-radio :label="7" size="large" style="color:#000;">Pending Payout</el-radio>
+            </div>
+            <div style="padding:10px 0;">
+              <el-radio :label="8" size="large" style="color:#000;">Payout Released</el-radio>
+            </div>
+            <div>
+              <el-radio :label="9" size="large" style="color:#000;">Payout Rejected</el-radio>
+            </div>
+            <div style="padding-top:10px;">
+              <el-radio :label="10" size="large" style="color:#000;">Payout Failed</el-radio>
             </div>
           </el-radio-group>
         </el-col>

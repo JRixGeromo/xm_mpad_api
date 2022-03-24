@@ -174,6 +174,20 @@ export default {
         transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('pending_payment'));
       } else if (status === 3) {
         transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('completed_payment'));
+      } else if (status === 4) {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('failed_payment'));
+      } else if (status === 5) {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('item_ship_out'));
+      } else if (status === 6) {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('item_received'));
+      } else if (status === 7) {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('pending_payout'));
+      } else if (status === 8) {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('payout_released'));
+      } else if (status === 9) {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('payout_rejected'));
+      } else if (status === 10) {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('payout_failed'));
       } else {
         transactionsList.value = transactionsListRes.value;
       }
