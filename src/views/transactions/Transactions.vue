@@ -36,7 +36,7 @@
       <!-- <el-col :span="24" :xs="12">
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col> -->
-      <el-col :span="24" :xs="12">
+      <el-col :span="24" :xs="12" style="align-self: center;">
         <Filter :tabs="tabOptions" :getTabLicense="getTabLicense" @newActiveStatus="newActiveStatus" />
       </el-col>
       <el-col :span="12" class="d-flex-end">
@@ -170,26 +170,10 @@ export default {
 
     const newActiveStatus = (status) => {
       activeStatus.value = status;
-      if (status === 2) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('pending_payment'));
-      } else if (status === 3) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('completed_payment'));
-      } else if (status === 4) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('failed_payment'));
-      } else if (status === 5) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('item_ship_out'));
-      } else if (status === 6) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('item_received'));
-      } else if (status === 7) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('pending_payout'));
-      } else if (status === 8) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('payout_released'));
-      } else if (status === 9) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('payout_rejected'));
-      } else if (status === 10) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes('payout_failed'));
-      } else {
+      if (status === 'all') {
         transactionsList.value = transactionsListRes.value;
+      } else {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes(status));
       }
       dataList.value = transactionsList.value;
       paginationCallback(1);
