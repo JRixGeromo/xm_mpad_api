@@ -198,7 +198,7 @@ export default {
 
     const searchThis = () => {
       dataList.value = keyWord.value ?
-        listings.value.filter((x) => x.license.toLowerCase().includes(keyWord.value.toLowerCase())) : listings.value;
+        listings.value.filter((x) => x.name.toLowerCase().includes(keyWord.value.toLowerCase())) : listings.value;
     };
 
     watch(listings, () => {
