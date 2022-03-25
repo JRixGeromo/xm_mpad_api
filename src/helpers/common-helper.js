@@ -52,10 +52,13 @@ export function formatDate(date) {
 }
 
 export function showHideFilterMenu() {
-  const el = document.getElementById('filter-div');
-  if (el.style.display === 'none') {
-    el.style.display = 'block';
-  } else {
-    el.style.display = 'none';
-  }
+  /* const el = document.getElementById('filter-div'); */
+  const el = document.getElementsByClassName('filter-div');
+  el.forEach((element) => {
+    if (element.style.display === 'none') {
+      element.style.display = 'block';
+    } else {
+      element.style.display = 'none';
+    }
+  });
 }
