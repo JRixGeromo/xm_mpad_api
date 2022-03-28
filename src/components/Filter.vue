@@ -83,7 +83,7 @@ export default {
   data() {
     return {
       tabName: this.modelValue,
-      activeStatus: 1,
+      activeStatus: 'all',
     };
   },
   methods: {

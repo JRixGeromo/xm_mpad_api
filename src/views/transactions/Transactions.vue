@@ -106,7 +106,7 @@ export default {
     const transactionsList = ref([]);
     const transactionsListRes = ref([]);
     const transactionsListLoading = ref(true);
-    const activeStatus = ref(1);
+    const activeStatus = ref('all');
     const sortTabName = ref('Sort By');
     const tabOptions = ref([]);
     const pagination = ref({
