@@ -247,10 +247,15 @@ export default {
     const remark = ref('');
 
     const productCharacters = computed(() => {
-      if (!productDetail.value.characters) {
+      if (!productDetail.value.characters.length) {
         return '';
       }
-      return productDetail.value.characters.split(',').join(', ');
+      const characters = ref([]);
+      productDetail.value.characters.forEach((element) => {
+        characters.value.push(element.name);
+      });
+      return characters.value.join(', ');
+      /* return productDetail.value.characters.split(',').join(', '); */
     });
 
     const isProdictActive = computed(() => productDetail.value.status === 'Active');

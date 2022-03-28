@@ -90,13 +90,13 @@ export default {
       products.value = productsData.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate)).slice(0, 4);
 
       const newListingsData = await productServices.getNewlistingCharts();
-      newListings.value = newListingsData.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
+      newListings.value = newListingsData.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       const purchasesChart = await transactionServices.getPurchasesChart();
-      purchases.value = purchasesChart.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
+      purchases.value = purchasesChart.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       const paymentsChart = await transactionServices.getPaymentsChart();
-      payments.value = paymentsChart.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
+      payments.value = paymentsChart.sort((a, b) => new Date(b.date) - new Date(a.date));
     });
 
     const store = useStore();

@@ -30,7 +30,7 @@ export default defineComponent({
     const dataDatasetsApproved = ref([]);
     const dataDatasetsRejected = ref([]);
     props.data.forEach((element) => {
-      dataLabels.value.push(dayjs(element.date).format('MM/DD'));
+      dataLabels.value.push(dayjs(element.day).format('MM/DD'));
       dataDatasetsApproved.value.push(element.approved);
       dataDatasetsRejected.value.push(element.rejected);
     });

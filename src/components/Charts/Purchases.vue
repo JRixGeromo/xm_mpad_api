@@ -29,7 +29,7 @@ export default defineComponent({
     const dataLabels = ref([]);
     const dataDatasetsData = ref([]);
     props.data.forEach((element) => {
-      dataLabels.value.push(dayjs(element.date).format('MM/DD'));
+      dataLabels.value.push(dayjs(element.day).format('MM/DD'));
       dataDatasetsData.value.push(element.value);
     });
     console.log('data', props.data);
