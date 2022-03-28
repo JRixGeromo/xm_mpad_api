@@ -97,14 +97,6 @@ export default {
 
       const paymentsChart = await transactionServices.getPaymentsChart();
       payments.value = paymentsChart.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
-
-      /*
-      transactionDetail.value = await transactionServices.getTransactionById(route.params.id);
-      transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
-      transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
-      transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
-      transactionStatus.value = transactionDetail.value.status.replace('_', ' ');
-      */
     });
 
     const store = useStore();

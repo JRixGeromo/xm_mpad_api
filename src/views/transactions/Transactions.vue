@@ -10,6 +10,13 @@
             class="transparent"
           ></el-button>
         </span>
+        <span>
+          <input
+            class="searchStyle"
+            v-model="keyWord"
+            @input="searchThis()"
+          />
+        </span>
       </el-col>
     </el-row>
     <el-row class="hidden-xs-only">
@@ -29,7 +36,7 @@
       <!-- <el-col :span="24" :xs="12">
         <CustomTab v-model="activeTabName" :tabs="tabOptions" />
       </el-col> -->
-      <el-col :span="24" :xs="12">
+      <el-col :span="24" :xs="12" style="align-self: center;">
         <Filter :tabs="tabOptions" :getTabLicense="getTabLicense" @newActiveStatus="newActiveStatus" />
       </el-col>
       <el-col :span="12" class="d-flex-end">
@@ -99,7 +106,7 @@ export default {
     const transactionsList = ref([]);
     const transactionsListRes = ref([]);
     const transactionsListLoading = ref(true);
-    const activeStatus = ref(1);
+    const activeStatus = ref('all');
     const sortTabName = ref('Sort By');
     const tabOptions = ref([]);
     const pagination = ref({
@@ -109,6 +116,7 @@ export default {
     });
     const paginationTimeout = ref([]);
     const dataList = ref(null);
+    const keyWord = ref('');
 
     onBeforeMount(() => {
       if (paginationTimeout.value.length > 0) {
@@ -162,12 +170,10 @@ export default {
 
     const newActiveStatus = (status) => {
       activeStatus.value = status;
-      if (status === 2) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.paymentStatus.toLowerCase().includes('pending_payment'));
-      } else if (status === 3) {
-        transactionsList.value = transactionsListRes.value.filter((x) => x.paymentStatus.toLowerCase().includes('completed_payment'));
-      } else {
+      if (status === 'all') {
         transactionsList.value = transactionsListRes.value;
+      } else {
+        transactionsList.value = transactionsListRes.value.filter((x) => x.status.toLowerCase().includes(status));
       }
       dataList.value = transactionsList.value;
       paginationCallback(1);
@@ -202,6 +208,11 @@ export default {
       getLicenses();
     });
 
+    const searchThis = () => {
+      dataList.value = keyWord.value ?
+        transactionsList.value.filter((x) => x.refNo.toLowerCase().includes(keyWord.value.toLowerCase())) : transactionsList.value;
+    };
+
     watch(transactionsList, () => {
       const transDataList = slicePage({
         ...pagination.value,
@@ -223,6 +234,8 @@ export default {
       paginationCallback,
       getTabLicense,
       newActiveStatus,
+      keyWord,
+      searchThis,
     };
   },
 };
