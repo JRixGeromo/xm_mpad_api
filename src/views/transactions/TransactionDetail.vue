@@ -85,20 +85,21 @@
                     <span v-if="index !== transactionDetail.transactionEvents.length - 1">
                     </span>
                     <div
+                        :class="index === 0 ? 'fw-700' : 'fw-300'"
                         style="
                           color:#000;
                           line-height:24px;
-                          font-weight:300;
                           margin-top:-5px;
                           margin-left:20px;
                           margin-bottom:20px;"
                         class="font-p">
-                        {{dayjs(transactionEvent.createdDate).format('DD/MM/YYYY hh:mm A')}} <br/>
+                        {{dayjs(transactionEvent.createdDate).format('DD/MM/YYYY hh:mm')}} <br/>
                         Transaction number: {{transactionDetail.refNo}} <br/>
-                        {{transactionEvent.event}} <br/>
+                        {{transactionEvent.event}}. <br/>
                         <div
+                          v-if="index === 0"
                           @click="dialogVisiblePaymentDetails = true;"
-                          style="color:rgb(7, 115, 255); cursor:pointer;"><u>View payment details</u>
+                          style="color:#006FBF; cursor:pointer; font-weight:300;"><u>View payment details</u>
                         </div>
                       </div>
                   </li>
@@ -326,6 +327,7 @@ export default {
   .events li {
     display: flex;
     color: #999;
+    position: relative;
   }
 
   .events time {
@@ -340,10 +342,24 @@ export default {
     top: 0;
     transform: translateX(50%);
     border-radius: 50%;
-    background: #fff;
-    border: 1px #ccc solid;
+    background-color: #fff;
+    border: 3px #00000099 solid;
     width: .8em;
     height: .8em;
+  }
+
+  .events li:first-of-type::before {
+    content: "";
+    position: absolute;
+    z-index: 3;
+    left: -23px;
+    top: -4px;
+    transform: translateX(50%);
+    border-radius: 50%;
+    background-color: #D76262;
+    border: 3px #D76262 solid;
+    width: 1.4em;
+    height: 1.4em;;
   }
 
   .events span {
@@ -354,9 +370,9 @@ export default {
     content: "";
     position: absolute;
     z-index: 1;
-    left: 0;
+    left: -2px;
     height: 100%;
-    border-left: 1px #ccc solid;
+    border-left: 3px #00000099 solid;
   }
 
   .events strong {
