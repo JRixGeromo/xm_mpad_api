@@ -33,7 +33,7 @@
               >
               <div>
                   <div>{{ transactionProduct.name }}</div>
-                  <div>{{ transactionProduct.license }}, {{ transactionProduct.scale }} Scale</div>
+                  <div>{{ transactionProduct.series.license.name }}, {{ transactionProduct.scale }} Scale</div>
               </div>
               <div class="font-bold fm-montserrat hidden-xs-only">{{ `SGD$${transactionProduct.listingPrice.toFixed(2)}` }}</div>
               </div>
