@@ -14,7 +14,7 @@
         >
           <div>
             <div>{{ transactionProduct.name }}</div>
-            <div>{{ transactionProduct.license }}, {{ transactionProduct.scale }} Scale</div>
+            <div>{{ transactionProduct.series.license.name }}, {{ transactionProduct.scale }} Scale</div>
           </div>
           <div class="font-bold fm-montserrat">SGD${{ transactionProduct.listingPrice.toLocaleString() }}</div>
         </div>
@@ -63,7 +63,7 @@
             <div class="d-flex">
               <div>
                 <div>{{ transactionProduct.name }}</div>
-                <div>{{ transactionProduct.license }}, {{ transactionProduct.scale }} Scale</div>
+                <div>{{ transactionProduct.series.license.name }}, {{ transactionProduct.scale }} Scale</div>
                 <div class="font-bold fm-montserrat fs-16">SGD${{ transactionProduct.listingPrice.toLocaleString() }}</div>
               </div>
             </div>

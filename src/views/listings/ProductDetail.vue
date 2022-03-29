@@ -57,7 +57,7 @@
           <div style="display: flex; flex-flow: column; padding-left: 10px;" class="hidden-xs-only">
             <div>
               <div>{{ productDetail.name }}</div>
-              <div>{{ `${productDetail.license}, ${productDetail.scale} Scale` }}</div>
+              <div>{{ `${productDetail.series.license.name}, ${productDetail.scale} Scale` }}</div>
             </div>
             <div
               style="margin-top: auto; font-weight: 700;"
@@ -69,7 +69,7 @@
         <div class="fs-16 fw-300" style="display: flex; flex-flow: column; padding-left: 10px; width:100%;">
           <div>
             <div>{{ productDetail.name }}</div>
-            <div>{{ `${productDetail.license}, ${productDetail.scale} Scale` }}</div>
+            <div>{{ `${productDetail.series.license.name}, ${productDetail.scale} Scale` }}</div>
           </div>
           <div
             class="fm-montserrat right-text"
@@ -156,7 +156,7 @@
             </div>
             <div class="additional-info">
               <div class="sub-header fs-20 left-text">Series</div>
-              <div class="left-text fs-16">{{ productDetail.series }}</div>
+              <div class="left-text fs-16">{{ productDetail.series.name }}</div>
             </div>
             <div class="additional-info">
               <div class="sub-header fs-20 left-text">Distributor</div>
