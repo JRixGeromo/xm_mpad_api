@@ -2,6 +2,11 @@
   <div class="px-40">
     <el-row class="hidden-xs-only">
       <el-col :span="24">
+        <h2 class="main-title">Transactions</h2>
+      </el-col>
+    </el-row>
+    <el-row class="hidden-xs-only">
+      <el-col :span="24">
         <span>
           <el-button
             size="mini"
@@ -17,11 +22,6 @@
             @input="searchThis()"
           />
         </span>
-      </el-col>
-    </el-row>
-    <el-row class="hidden-xs-only">
-      <el-col :span="24">
-        <h2 class="main-title">Transactions</h2>
       </el-col>
     </el-row>
     <el-row class="hidden-xs-only">

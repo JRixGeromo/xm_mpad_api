@@ -1,6 +1,6 @@
 <template>
   <div class="px-40">
-    <el-row class="hidden-xs-only">
+    <!-- <el-row class="hidden-xs-only">
       <el-col :span="24">
         <span>
           <el-button
@@ -11,7 +11,7 @@
           ></el-button>
         </span>
       </el-col>
-    </el-row>
+    </el-row> -->
     <el-row class="hidden-xs-only">
       <el-col :span="24">
         <h2 class="main-title">Settings</h2>
