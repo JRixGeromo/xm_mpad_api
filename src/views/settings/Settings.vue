@@ -36,6 +36,20 @@
                   <div style="text-align: center;"><u>marketplacelogo.png</u></div>
                 </el-col>
               </el-row>
+              <el-row class="mobile-center">
+                <el-col :span="24" :xs="24" style="text-align: right">
+                  <span>
+                    <el-button
+                      class="font-bold discard-btn custom-btn"
+                    >DISCARD
+                    </el-button>
+                    <el-button
+                      class="font-bold save-btn custom-btn"
+                    >SAVE
+                    </el-button>
+                  </span>
+                </el-col>
+              </el-row>
             </el-collapse-item>
           </el-collapse>
         </div>
@@ -67,6 +81,20 @@
                     </div>
                   </el-col>
                 </el-row>
+                <el-row>
+                  <el-col :span="24" :xs="24" style="text-align: right">
+                    <span>
+                      <el-button
+                        class="font-bold discard-btn custom-btn"
+                      >DISCARD
+                      </el-button>
+                      <el-button
+                        class="font-bold save-btn custom-btn"
+                      >SAVE
+                      </el-button>
+                    </span>
+                  </el-col>
+                </el-row>
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -87,6 +115,21 @@
                     </div>
                   </el-col>
                 </el-row>
+                <el-row>
+                  <el-col :span="24" :xs="24" style="text-align: right">
+                    <span>
+                      <el-button
+                        class="font-bold discard-btn custom-btn"
+                      >DISCARD
+                      </el-button>
+                      <el-button
+                        class="font-bold save-btn custom-btn"
+                      >SAVE
+                      </el-button>
+                    </span>
+                  </el-col>
+                </el-row>
+
               </div>
             </el-collapse-item>
           </el-collapse>
