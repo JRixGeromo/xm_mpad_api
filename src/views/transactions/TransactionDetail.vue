@@ -106,44 +106,6 @@
                         </div>
                       </div>
                   </li>
-                  <!-- <li>
-                    <time datetime="10:03"></time>
-                    <span>
-                      <div
-                        style="color:#000;line-height:24px;font-weight:400; margin-top:-5px;"
-                        class="font-p">
-                        02/01/2021 16:45 <br/>
-                        Transaction number: a1234t235g32f9v4cv <br/>
-                        desmondzth made a payment of SGD$700.00 via Credit Card <br/>
-                        <div
-                          @click="dialogVisiblePaymentDetails = true;"
-                          style="color:rgb(7, 115, 255); cursor:pointer;"><u>View payment details</u>
-                        </div>
-                      </div>
-                    </span>
-                  </li>
-                  <li>
-                    <time datetime="10:03"></time>
-                    <span>
-                      <div
-                        style="color:#000;line-height:24px;font-weight:400; margin-top:-5px;"
-                        class="font-p">
-                        02/01/2021 16:19 <br/>
-                        Transaction number: a1234t235g32f9v4cv <br/>
-                        sellerusername accepted offer of SGD$700.00
-                      </div>
-                    </span>
-                  </li>
-                  <li>
-                    <time datetime="10:03"></time>
-                    <div
-                      style="color:#000;line-height:24px;font-weight:400; margin-left:20px; margin-top:-5px;"
-                      class="font-p">
-                      01/01/2021 13:45 <br/>
-                      Transaction number: a1234t235g32f9v4cv <br/>
-                      desmondzth made an offer of SGD$700.00
-                    </div>
-                  </li> -->
                 </ul>
               </div>
           </el-col>
@@ -217,12 +179,12 @@
         <span class="dialog-footer">
           <el-button
             class="font-bold reject-btn custom-btn"
-            :disabled="transactionDetail.status=='Item_Ship_Out'"
+            :disabled="transactionDetail.status!='Item_Received'"
             @click="rejectTransaction(transactionDetail.transactionId)">REJECT
           </el-button>
           <el-button
             class="font-bold approve-btn custom-btn"
-            :disabled="transactionDetail.status=='Item_Ship_Out'"
+            :disabled="transactionDetail.status!='Item_Received'"
             @click="
               dialogVisiblePaymentDetails = false;
               dialogVisiblePaymentApproved = true;
