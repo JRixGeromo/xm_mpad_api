@@ -65,9 +65,9 @@
                 text-align: center;
                 font-weight: 700;
                 padding: 5px 0;
-                background-color:#D76262;
                 border-radius: 10px;
                 "
+                v-bind:class="[transactionDetail.status!='Item_Ship_Out' ? 'trans-red-color' : 'trans-yellow-color']"
               >
                 <p class="fs-20 fw-700 fm-montserrat">Status:</p>
                 <p style="font-weight: 300; font-size: 16px;">{{ transactionStatus }}</p>
@@ -79,7 +79,10 @@
       <el-row style="justify-content: center;">
           <el-col :span="12" :xs="24">
               <div style="height:300px; margin:40px 0;">
-                <ul class="events">
+                <ul
+                  class="events"
+                  v-bind:class="[transactionDetail.status!='Item_Ship_Out' ? 'events_r' : 'events_y']"
+                >
                   <li v-for="(transactionEvent, index) in transactionDetail.transactionEvents" :key="transactionEvent">
                     <time :datetime="transactionEvent.createdDate"></time>
                     <span v-if="index !== transactionDetail.transactionEvents.length - 1">
@@ -97,7 +100,7 @@
                         Transaction number: {{transactionDetail.refNo}} <br/>
                         {{transactionEvent.event}}. <br/>
                         <div
-                          v-if="index === 0"
+                          v-if="index === 0 && transactionDetail.status!='Item_Ship_Out'"
                           @click="dialogVisiblePaymentDetails = true;"
                           style="color:#006FBF; cursor:pointer; font-weight:300;"><u>View payment details</u>
                         </div>
@@ -214,10 +217,12 @@
         <span class="dialog-footer">
           <el-button
             class="font-bold reject-btn custom-btn"
+            :disabled="transactionDetail.status=='Item_Ship_Out'"
             @click="rejectTransaction(transactionDetail.transactionId)">REJECT
           </el-button>
           <el-button
             class="font-bold approve-btn custom-btn"
+            :disabled="transactionDetail.status=='Item_Ship_Out'"
             @click="
               dialogVisiblePaymentDetails = false;
               dialogVisiblePaymentApproved = true;
@@ -356,10 +361,20 @@ export default {
     top: -4px;
     transform: translateX(50%);
     border-radius: 50%;
-    background-color: #D76262;
-    border: 3px #D76262 solid;
+    // background-color: #D76262;
+    // border: 3px #D76262 solid;
     width: 1.4em;
     height: 1.4em;;
+  }
+
+  .events_y li:first-of-type::before {
+    background-color: #FDE07B;
+    border: 3px #FDE07B solid;
+  }
+
+  .events_r li:first-of-type::before {
+    background-color: #D76262;
+    border: 3px #D76262 solid;
   }
 
   .events span {
@@ -384,4 +399,11 @@ export default {
   .events,
   .events *::before,
   .events *::after { box-sizing: border-box; font-family: arial; }
+
+  .trans-yellow-color {
+    background-color: #FDE07B;
+  }
+  .trans-red-color {
+    background-color: #D76262;
+  }
 </style>
