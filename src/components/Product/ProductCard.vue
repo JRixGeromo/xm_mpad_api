@@ -34,13 +34,12 @@ export default {
     },
   },
   setup(props) {
-    const data = ref([]);
-    data.value = {
+    const data = ref({
       name: props.productDetail.name,
       imgUrl: props.productDetail.images[0].productImageUrl,
       licenseName: props.productDetail.characters.length > 0 ? props.productDetail.characters[0].license.name : '',
       scale: props.productDetail.scale,
-    };
+    });
 
     return {
       data,

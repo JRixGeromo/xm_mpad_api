@@ -157,7 +157,7 @@ export default {
       paginationTimeout.value = setTimeout(() => {
         /* dataList.value = prodDataList.data; */
         if (activeTabName.value !== 'all') {
-          dataList.value = prodDataList.data.filter((x) => x.license.toLowerCase().includes(activeTabName.value));
+          dataList.value = prodDataList.data.filter((x) => x.characters.some((y) => y.license.name.toLowerCase() === activeTabName.value));
         } else {
           dataList.value = prodDataList.data;
         }
@@ -170,7 +170,8 @@ export default {
         listings.value = listingRes.value.data;
         dataList.value = listings.value;
       } else {
-        listings.value = listingRes.value.data.filter((x) => x.license.toLowerCase().includes(tab));
+        console.log(listingRes.value.data);
+        listings.value = listingRes.value.data.filter((x) => x.characters.some((y) => y.license.name.toLowerCase() === tab));
         dataList.value = listings.value;
       }
       paginationCallback(1);
