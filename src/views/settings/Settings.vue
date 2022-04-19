@@ -149,6 +149,7 @@ import { ref, onMounted } from 'vue';
 import configurationServices from '@/services/configuration-service';
 import axios from 'axios';
 import { SetAuthHeader } from '@/services/api';
+import { ElMessage } from 'element-plus';
 
 export default {
   name: 'Settings',
@@ -168,7 +169,16 @@ export default {
         value: commission.value,
         dataType: 'string',
       }];
-      await axios.put(`${process.env.VUE_APP_GENERIC_API_DOMAIN}api/configuration/v1/Platform Settings`, obj, SetAuthHeader());
+      await axios.put(`${process.env.VUE_APP_GENERIC_API_DOMAIN}api/configuration/v1/Platform Settings`, obj, SetAuthHeader())
+        .then(() => {
+          ElMessage({
+            message: 'Successfully Updated',
+            type: 'success',
+          });
+        })
+        .catch((error) => {
+          ElMessage.error('Oops, there was an error.', error);
+        });
     };
 
     return {

@@ -232,6 +232,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { SetAuthHeader } from '@/services/api';
+import { ElMessage } from 'element-plus';
 
 export default {
   setup() {
@@ -271,9 +272,27 @@ export default {
         remark: remark.value,
       };
       if (isProdictActive.value) {
-        await axios.put(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/product/lock`, obj, SetAuthHeader());
+        await axios.put(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/product/lock`, obj, SetAuthHeader())
+          .then(() => {
+            ElMessage({
+              message: 'Successfully Updated',
+              type: 'success',
+            });
+          })
+          .catch((error) => {
+            ElMessage.error('Oops, there was an error.', error);
+          });
       } else {
-        await axios.put(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/product/unlock`, obj, SetAuthHeader());
+        await axios.put(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/product/unlock`, obj, SetAuthHeader())
+          .then(() => {
+            ElMessage({
+              message: 'Successfully Updated',
+              type: 'success',
+            });
+          })
+          .catch((error) => {
+            ElMessage.error('Oops, there was an error.', error);
+          });
       }
       dialogLock.value = false;
       remark.value = '';
