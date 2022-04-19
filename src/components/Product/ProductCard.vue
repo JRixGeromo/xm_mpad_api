@@ -2,11 +2,11 @@
   <div class="product-card">
     <div class="product-card-wrapper">
         <div class="product-img-wrapper">
-          <img class="product-img" :src="productDetail.images[0].productImageUrl" />
+          <img class="product-img" :src="data.imgUrl" />
         </div>
         <div style="text-align: left; line-height: 1.7" class="sub-label-light fs-16">
-          <div>{{ productDetail.name }}</div>
-          <div>{{ productDetail.characters[0].license.name }}, {{ productDetail.scale }} Scale</div>
+          <div><span>{{ data.name }}</span></div>
+          <div>{{ data.licenseName }}, {{ data.scale }} Scale</div>
         </div>
         <div
           style="padding-bottom: 10px; text-align: right; line-height: 2.5"
@@ -19,7 +19,10 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+
 export default {
+
   props: {
     productDetail: {
       type: Object,
@@ -29,6 +32,19 @@ export default {
       type: String,
       default: null,
     },
+  },
+  setup(props) {
+    const data = ref([]);
+    data.value = {
+      name: props.productDetail.name,
+      imgUrl: props.productDetail.images[0].productImageUrl,
+      licenseName: props.productDetail.characters.length > 0 ? props.productDetail.characters[0].license.name : '',
+      scale: props.productDetail.scale,
+    };
+
+    return {
+      data,
+    };
   },
 };
 </script>
