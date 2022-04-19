@@ -111,7 +111,11 @@
                 <el-row>
                   <el-col :span="24">
                     <div style="width: 160px;">
-                      <input type="number" placeholder="Type...." style="height: 10px;"> <span class="fw-700 fs-20 fm-montserrat">%</span>
+                      <input
+                        v-model="commission"
+                        type="number"
+                        placeholder="Type...."
+                        style="height: 10px;"><span class="fw-700 fs-20 fm-montserrat">%</span>
                     </div>
                   </el-col>
                 </el-row>
@@ -124,6 +128,7 @@
                       </el-button>
                       <el-button
                         class="font-bold save-btn custom-btn"
+                        @click="updateCommission"
                       >SAVE
                       </el-button>
                     </span>
@@ -140,15 +145,37 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import configurationServices from '@/services/configuration-service';
+import axios from 'axios';
+import { SetAuthHeader } from '@/services/api';
 
 export default {
   name: 'Settings',
   setup() {
     const input = ref('');
+    const commission = ref(0);
+    const configuration = ref([]);
+
+    onMounted(async () => {
+      configuration.value = await configurationServices.getConfigurationByName('Platform Settings');
+      commission.value = configuration.value[0].configurations[0].value;
+    });
+
+    const updateCommission = async () => {
+      const obj = [{
+        name: configuration.value[0].configurations[0].name,
+        value: commission.value,
+        dataType: 'string',
+      }];
+      await axios.put(`${process.env.VUE_APP_GENERIC_API_DOMAIN}api/configuration/v1/Platform Settings`, obj, SetAuthHeader());
+    };
 
     return {
       input,
+      updateCommission,
+      commission,
+      configuration,
     };
   },
 };

@@ -32,9 +32,6 @@ export default defineComponent({
       dataLabels.value.push(dayjs(element.day).format('MM/DD'));
       dataDatasetsData.value.push(element.value);
     });
-    console.log('data', props.data);
-    console.log('dataLabels', dataLabels.value);
-    console.log('dataDatasetsData', dataDatasetsData.value);
 
     const options = ref({
       chart: {
