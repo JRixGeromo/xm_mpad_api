@@ -36,9 +36,9 @@
                   <div style="text-align: center;"><u>marketplacelogo.png</u></div>
                 </el-col>
               </el-row>
-              <el-row class="mobile-center">
+              <el-row class="mobile-center" style="margin-top: 15px;">
                 <el-col :span="24" :xs="24" style="text-align: right">
-                  <span>
+                  <span class="mobile-center">
                     <el-button
                       class="font-bold discard-btn custom-btn"
                     >DISCARD
@@ -81,9 +81,9 @@
                     </div>
                   </el-col>
                 </el-row>
-                <el-row>
+                <el-row style="margin-top: 20px;">
                   <el-col :span="24" :xs="24" style="text-align: right">
-                    <span>
+                    <span class="mobile-center">
                       <el-button
                         class="font-bold discard-btn custom-btn"
                       >DISCARD
@@ -119,9 +119,9 @@
                     </div>
                   </el-col>
                 </el-row>
-                <el-row>
+                <el-row style="margin-top: 20px;">
                   <el-col :span="24" :xs="24" style="text-align: right">
-                    <span>
+                    <span class="mobile-center">
                       <el-button
                         class="font-bold discard-btn custom-btn"
                       >DISCARD
