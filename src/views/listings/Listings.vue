@@ -170,7 +170,6 @@ export default {
         listings.value = listingRes.value.data;
         dataList.value = listings.value;
       } else {
-        console.log(listingRes.value.data);
         listings.value = listingRes.value.data.filter((x) => x.characters.some((y) => y.license.name.toLowerCase() === tab));
         dataList.value = listings.value;
       }
