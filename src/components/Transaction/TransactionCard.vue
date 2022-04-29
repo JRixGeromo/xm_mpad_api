@@ -13,7 +13,7 @@
           class="sub-label-light fs-16 d-flex-column h-100"
         >
           <div>
-            <div>{{ transactionProduct.name }}</div>
+            <div :title="transactionProduct.productId">{{ transactionProduct.name }}</div>
             <div>{{ transactionProduct.series.license.name }}, {{ transactionProduct.scale }} Scale</div>
           </div>
           <div class="font-bold fm-montserrat">SGD${{ transactionProduct.listingPrice.toLocaleString() }}</div>
@@ -48,7 +48,7 @@
 
             <div class="px-10 hidden-sm-and-down">
               <div class="font-bold fs-20 font-m">Status</div>
-              <div>{{ transactionProduct.status }}</div>
+              <div>{{ transactionStatus }}</div>
             </div>
             <div class="px-10 hidden-sm-and-down">
               <div>{{ dayjs(transactionDetail.paymentDate).format('DD/MM/YYYY hh:mm A') }}</div>
@@ -77,7 +77,7 @@
             <div class="d-flex">
               <div>
                 <div class="font-bold fs-16 font-m">Status</div>
-              <div class="fs-12">{{ transactionProduct.status }}</div>
+              <div class="fs-12">{{ transactionStatus }}</div>
               </div>
             </div>
           </div>
@@ -117,11 +117,13 @@ export default {
     const transactionProduct = ref([]);
     const transactionSeller = ref([]);
     const transactionBuyer = ref([]);
+    const transactionStatus = ref('');
 
     const getTransactions = async () => {
       transactionProduct.value = await productServices.getProductById(props.transactionDetail.productId);
       transactionSeller.value = await profileServices.getProfilebyUserId(props.transactionDetail.sellerUserId);
       transactionBuyer.value = await profileServices.getProfilebyUserId(props.transactionDetail.buyerUserId);
+      transactionStatus.value = props.transactionDetail.status.replace('_', ' ').replace('_', ' ');
     };
 
     onMounted(async () => {
@@ -133,6 +135,7 @@ export default {
       transactionSeller,
       transactionBuyer,
       dayjs,
+      transactionStatus,
     };
   },
 };

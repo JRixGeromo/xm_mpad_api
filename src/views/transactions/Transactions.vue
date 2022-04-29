@@ -210,7 +210,12 @@ export default {
 
     const searchThis = () => {
       dataList.value = keyWord.value ?
-        transactionsList.value.filter((x) => x.refNo.toLowerCase().includes(keyWord.value.toLowerCase())) : transactionsList.value;
+        transactionsList.value.filter((x) => x.productId.toLowerCase().includes(keyWord.value.toLowerCase())) : transactionsList.value;
+      // if (keyWord.value) {
+      //   dataList.value = transactionsList.value.data.filter((x) => x.characters.some((y) => y.license.name.toLowerCase() === keyWord.value));
+      // } else {
+      //   dataList.value = transactionsList.value.data;
+      // }
     };
 
     watch(transactionsList, () => {

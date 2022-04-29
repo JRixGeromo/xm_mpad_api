@@ -56,16 +56,24 @@ function getPaymentsChart() {
     });
 }
 
-function approveTransaction(transactionId) {
-  return MpApiIni().get(`/api/mp/transaction/v1/${transactionId}/transaction/approve`, SetAuthHeader())
+function approveTransaction(approveDetails) {
+  return MpApiIni().post('/api/mp/transaction/v1/transaction/approve', approveDetails, SetAuthHeader())
     .then((response) => response.data)
     .catch((error) => {
       throw error.response.data;
     });
 }
 
-function rejectTransaction(transactionId) {
-  return MpApiIni().get(`/api/mp/transaction/v1/${transactionId}/transaction/reject`, SetAuthHeader())
+function rejectTransaction(rejectDetails) {
+  return MpApiIni().post('/api/mp/transaction/v1/transaction/reject', rejectDetails, SetAuthHeader())
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error.response.data;
+    });
+}
+
+function getPayoutMethods() {
+  return MpApiIni().get('/api/mp/transaction/v1/transaction/payoutmethods', SetAuthHeader())
     .then((response) => response.data)
     .catch((error) => {
       throw error.response.data;
@@ -82,6 +90,7 @@ const services = {
   getPaymentsChart,
   approveTransaction,
   rejectTransaction,
+  getPayoutMethods,
 };
 
 export default services;

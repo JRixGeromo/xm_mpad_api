@@ -159,19 +159,19 @@
             <span>Payment Type:</span>
           </el-col>
           <el-col :span="11" :offset="2">
-            <span>Credit Card</span>
+            <span>{{ paymentInfo.name }}</span>
           </el-col>
-          <el-col :span="9" :offset="2">
+          <!-- <el-col :span="9" :offset="2">
             <span>Credit Card Type:</span>
           </el-col>
           <el-col :span="11" :offset="2">
             <span>Visa</span>
-          </el-col>
+          </el-col> -->
           <el-col :span="9" :offset="2">
             <span>Account Number:</span>
           </el-col>
           <el-col :span="11" :offset="2">
-            <span>***********1234</span>
+            <span>{{ paymentInfo.acctNo }}</span>
           </el-col>
         </el-row>
       </div>
@@ -229,13 +229,15 @@ import productServices from '@/services/product-service';
 import profileServices from '@/services/profile-service';
 import transactionServices from '@/services/transaction-service';
 import configurationServices from '@/services/configuration-service';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 
 export default {
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const transactionProduct = ref([]);
+    const payoutMethods = ref([]);
     const transactionSeller = ref([]);
     const transactionBuyer = ref([]);
     const transactionDetail = ref([]);
@@ -244,6 +246,11 @@ export default {
     const dialogVisiblePaymentDetails = ref(false);
     const dialogVisiblePaymentApproved = ref(false);
     const transactionStatus = ref('');
+    const paymentInfo = ref({
+      name: '',
+      acctNo: '',
+    });
+    const paymentType = ref([]);
     const remarks = ref('');
 
     onMounted(async () => {
@@ -251,20 +258,38 @@ export default {
       transactionProduct.value = await productServices.getProductById(transactionDetail.value.productId);
       transactionSeller.value = await profileServices.getProfilebyUserId(transactionDetail.value.sellerUserId);
       transactionBuyer.value = await profileServices.getProfilebyUserId(transactionDetail.value.buyerUserId);
+      payoutMethods.value = await transactionServices.getPayoutMethods();
       configuration.value = await configurationServices.getConfigurationByName('Platform Settings');
-      transactionStatus.value = transactionDetail.value.status.replace('_', ' ');
+      transactionStatus.value = transactionDetail.value.status.replace('_', ' ').replace('_', ' ');
       sellerReceives.value = (transactionDetail.value.price - (configuration.value[0].configurations[0].value
       / transactionDetail.value.price) * 100).toFixed(2);
+      if (transactionBuyer.value.payoutInfo) {
+        paymentType.value = payoutMethods.value.filter((x) => x.payoutMethodType.includes(transactionBuyer.value.payoutInfo.payoutMethod));
+        paymentInfo.value = {
+          name: paymentType.value[0].name,
+          acctNo: `**********${transactionBuyer.value.payoutInfo.accountNumber.slice(-4)}`,
+        };
+      }
     });
 
-    const approveTransaction = (transactionId) => {
-      transactionServices.approveTransaction(transactionId);
+    const approveTransaction = async (transactionId) => {
+      const obj = {
+        transactionId,
+        remark: remarks.value,
+      };
+      await transactionServices.approveTransaction(obj);
       dialogVisiblePaymentApproved.value = false;
+      router.push('/transactions');
     };
 
-    const rejectTransaction = (transactionId) => {
-      transactionServices.rejectTransaction(transactionId);
+    const rejectTransaction = async (transactionId) => {
+      const obj = {
+        transactionId,
+        remark: '',
+      };
+      await transactionServices.rejectTransaction(obj);
       dialogVisiblePaymentDetails.value = false;
+      router.push('/transactions');
     };
 
     const store = useStore();
@@ -285,6 +310,8 @@ export default {
       approveTransaction,
       rejectTransaction,
       remarks,
+      payoutMethods,
+      paymentInfo,
     };
   },
 };
