@@ -1,7 +1,7 @@
 import { MpApiIni, SetAuthHeader } from './api';
 
 function getProducts() {
-  return MpApiIni().get('/api/mp/product/v1/products', SetAuthHeader())
+  return MpApiIni().get('/api/mp/product/v1/products/admin', SetAuthHeader())
     .then((response) => response.data)
     .catch((error) => {
       throw error.response.data;
