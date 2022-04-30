@@ -83,6 +83,7 @@ import CustomTab from '@/components/CustomTab.vue';
 import SortBy from '@/components/SortBy.vue';
 import { CONFIGURATION_NAMES } from '@/common/constants';
 import configurationServices from '@/services/configuration-service';
+import { SetAuthHeader } from '@/services/api';
 
 export default {
   name: 'Listings',
@@ -187,7 +188,7 @@ export default {
     };
 
     const getProducts = async () => {
-      listingRes.value = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products`);
+      listingRes.value = await axios.get(`${process.env.VUE_APP_MP_API_DOMAIN}api/mp/product/v1/products/admin`, SetAuthHeader());
       getSortBy('Newest');
     };
 
