@@ -9,6 +9,7 @@
     v-model="drawer"
     :with-header="false"
     :before-close="handleSidebarShow"
+    :close-on-press-escape="false"
     modal-class="mobile-nav-drawer"
     :direction="isProfileNav ? 'rtl' : 'ltr'"
     size="100%"
