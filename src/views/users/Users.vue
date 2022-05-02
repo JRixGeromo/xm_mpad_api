@@ -119,15 +119,6 @@ export default {
       }
     });
 
-    const getSortBy = (sortBy) => {
-      if (sortBy === 'Newest') {
-        listingRes.value = listingRes.value.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-      } else {
-        listingRes.value = listingRes.value.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
-      }
-      dataList.value = listingRes.value;
-    };
-
     const retreiveProfiles = () => {
       MpApiIni()
         .get('/api/mp/profile/v1/profiles')
@@ -176,6 +167,17 @@ export default {
       }, 1);
       pagination.value = usersDataList.pagination;
     };
+
+    const getSortBy = (sortBy) => {
+      if (sortBy === 'Newest') {
+        listingRes.value = listingRes.value.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      } else {
+        listingRes.value = listingRes.value.sort((a, b) => new Date(a.createdDate) - new Date(b.createdDate));
+      }
+      dataList.value = listingRes.value;
+      paginationCallback(1);
+    };
+
     watch(profiles, () => {
       const usersDataList = slicePage({
         ...pagination.value,
