@@ -200,7 +200,7 @@
       :width="isMobileView ? '100%' : '60%'"
     >
     <div style="margin-bottom: 20px; color: #000;">
-      <span>Upon confirming, buyer 'desmondtzh' 's payment of SGD$3800.00 (after 5% comission fee) will be released to seller <span style="text-decoration: underline;">'sellerusername'</span>.</span>
+      <span>Upon confirming, buyer '{{transactionBuyer.userName}}'s payment of SGD${{ sellerReceives }} (after {{configuration[0].configurations[0].value}}% comission fee) will be released to seller <span style="text-decoration: underline;">'{{transactionSeller.userName}}'</span>.</span>
     </div>
       <el-input
         v-model="remarks"
