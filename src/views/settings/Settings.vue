@@ -25,10 +25,23 @@
               <div>Upload a logo in .jpg or .png format.</div>
               <el-row>
                 <el-col :span="6" :xs="24" style="text-align: center; margin-top: 20px;">
-                  <div style="border: 1px solid #C4C4C4; padding: 20px 10px;"><h1 class="custom-menu-title">XMarketplace</h1></div>
+                  <div style="border: 1px solid #C4C4C4; padding: 20px 10px;">
+                    <div style="text-align: center"><img :src="marketPlaceLogo" style="max-width: 186px"/></div>
+                    <h1 class="custom-menu-title">XMarketplace</h1>
+                  </div>
                 </el-col>
                 <el-col :span="12" :offset="1" :xs="{offset:0,span:24}" class="d-flex-center mobile-center">
-                  <div><u>Upload a new logo</u></div>
+                  <div>
+                    <el-upload
+                      action=""
+                      :show-file-list="false"
+                      :on-change="handleLogoImg"
+                      :auto-upload="false"
+                      :accept="fileFormat"
+                    >
+                    <u>Upload a new logo</u>
+                    </el-upload>
+                  </div>
                 </el-col>
               </el-row>
               <el-row class="mobile-center">
@@ -41,10 +54,12 @@
                   <span class="mobile-center">
                     <el-button
                       class="font-bold discard-btn custom-btn"
+                      @click="discardLogo"
                     >DISCARD
                     </el-button>
                     <el-button
                       class="font-bold save-btn custom-btn"
+                      @click="updateLogo"
                     >SAVE
                     </el-button>
                   </span>
@@ -147,6 +162,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import configurationServices from '@/services/configuration-service';
+import fileUploadServices from '@/services/file-upload-service';
 import axios from 'axios';
 import { SetAuthHeader } from '@/services/api';
 import { ElMessage } from 'element-plus';
@@ -156,16 +172,22 @@ export default {
   setup() {
     const input = ref('');
     const commission = ref(0);
+    const marketPlaceLogo = ref('');
     const configuration = ref([]);
-
+    const configurationLogo = ref([]);
+    const logo = ref({
+      imageUrl: null,
+      imageFile: null,
+    });
     onMounted(async () => {
       configuration.value = await configurationServices.getConfigurationByName('Platform Settings');
       commission.value = configuration.value[0].configurations[0].value;
+      configurationLogo.value = await configurationServices.getConfigurationByName('Marketplace Logo');
+      marketPlaceLogo.value = configurationLogo.value[0].configurations[0].value;
     });
-
     const updateCommission = async () => {
       const obj = [{
-        name: configuration.value[0].configurations[0].name,
+        name: 'commission',
         value: commission.value,
         dataType: 'string',
       }];
@@ -181,11 +203,44 @@ export default {
         });
     };
 
+    const updateLogo = async () => {
+      const fileUrl = await fileUploadServices.uploadFile(logo.value.imageFile);
+      const obj = [{
+        name: 'marketplace logo',
+        value: process.env.VUE_APP_FILE_DOMAIN + fileUrl,
+        dataType: 'string',
+      }];
+      await axios.put(`${process.env.VUE_APP_GENERIC_API_DOMAIN}api/configuration/v1/Marketplace Logo`, obj, SetAuthHeader())
+        .then(() => {
+          ElMessage({
+            message: 'Successfully Updated',
+            type: 'success',
+          });
+        })
+        .catch((error) => {
+          ElMessage.error('Oops, there was an error.', error);
+        });
+    };
+
+    const handleLogoImg = (file) => {
+      logo.value.imageUrl = URL.createObjectURL(file.raw);
+      marketPlaceLogo.value = logo.value.imageUrl;
+      logo.value.imageFile = file.raw;
+    };
+    const discardLogo = () => {
+      marketPlaceLogo.value = configurationLogo.value[0].configurations[0].value;
+    };
     return {
       input,
       updateCommission,
       commission,
+      configurationLogo,
       configuration,
+      logo,
+      handleLogoImg,
+      updateLogo,
+      marketPlaceLogo,
+      discardLogo,
     };
   },
 };

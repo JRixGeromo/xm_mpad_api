@@ -2,8 +2,9 @@
   <div class="payment-card" v-if="transactionDetail && transactionProduct.images">
     <el-row>
       <el-col :span="6" :xs="12">
-        <div class="product-img-wrapper d-flex-column">
-          <div class="hidden-sm-and-down">{{ dayjs(transactionDetail.createdDate).format('DD/MM/YYYY') }}</div>
+        <div class="product-img-wrapper d-flex-column" :title="transactionDetail.productId">
+          <div :title="transactionDetail.transactionId"
+            class="hidden-sm-and-down">{{ dayjs(transactionDetail.createdDate).format('DD/MM/YYYY') }}</div>
           <img class="product-img" :src="transactionProduct.images[0].productImageUrl" />
         </div>
       </el-col>

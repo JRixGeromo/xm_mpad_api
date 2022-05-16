@@ -1,6 +1,6 @@
 <template>
   <div class="px-40">
-    <el-row>
+    <!-- <el-row>
       <el-col :span="24" class="hidden-sm-and-down">
         <span>
           <el-button
@@ -11,7 +11,7 @@
           ></el-button>
         </span>
       </el-col>
-    </el-row>
+    </el-row> -->
     <el-row>
       <router-link to="/transactions">
         <p class="fs-20" style="font-weight:400; color:#000;">
